@@ -1,0 +1,13 @@
+bootJar { enabled = false }
+jar { enabled = true }
+
+dependencies {
+    implementation project(':domain')
+    implementation project(':application')
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}

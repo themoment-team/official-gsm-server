@@ -1,0 +1,5 @@
+rootProject.name = 'officialgsm'
+include 'domain'
+include 'application'
+include 'presentation'
+include 'infrastructure'
