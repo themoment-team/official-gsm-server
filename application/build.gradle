@@ -4,6 +4,7 @@ jar { enabled = true }
 dependencies {
 	implementation project(':domain')
 
+	/* test */
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 

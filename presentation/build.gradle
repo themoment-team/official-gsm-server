@@ -5,6 +5,7 @@ dependencies {
     implementation project(':domain')
     implementation project(':application')
 
+    /* test */
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
