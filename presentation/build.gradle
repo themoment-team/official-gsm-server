@@ -7,6 +7,9 @@ dependencies {
 
     /* test */
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    /* spring app */
+    implementation 'org.springframework.boot:spring-boot-starter-web'
 }
 
 tasks.named('test') {
