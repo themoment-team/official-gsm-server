@@ -1,5 +1,5 @@
 package team.themoment.officialgsm.common.util;
 
 public interface EmailUtil {
-    void getOauthEmailDomain(String email);
+    String getOauthEmailDomain(String email);
 }

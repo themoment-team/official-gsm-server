@@ -1,7 +1,8 @@
 package team.themoment.officialgsm.persistence.token.entity;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import lombok.*;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.TimeToLive;
 import org.springframework.data.redis.core.index.Indexed;
@@ -11,7 +12,8 @@ import org.springframework.data.redis.core.index.Indexed;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@RedisHash("refreshToken")
+@Entity
+//@RedisHash("refreshToken")
 public class RefreshTokenRedisEntity {
 
     @Id
