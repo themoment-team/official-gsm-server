@@ -56,6 +56,7 @@ public class OAuthService implements OAuth2UserService<OAuth2UserRequest, OAuth2
         Collection<GrantedAuthority> authorities = new ArrayList<>(oAuth2User.getAuthorities());
         authorities.add(new SimpleGrantedAuthority(role.name()));
 
+
         return new UserInfo(authorities, attributes, nameAttribute);
     }
 
