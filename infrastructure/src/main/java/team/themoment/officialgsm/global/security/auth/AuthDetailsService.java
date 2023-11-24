@@ -1,10 +1,7 @@
 package team.themoment.officialgsm.global.security.auth;
 
-import com.themoment.officialgsm.domain.auth.repository.UserRepository;
-import com.themoment.officialgsm.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
