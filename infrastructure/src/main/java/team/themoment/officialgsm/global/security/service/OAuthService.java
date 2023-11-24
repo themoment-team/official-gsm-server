@@ -45,7 +45,7 @@ public class OAuthService implements OAuth2UserService<OAuth2UserRequest, OAuth2
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2User oAuth2User = delegateOauth2UserService.loadUser(userRequest);
 
-        emailCheckLogic(oAuth2User.getAttribute("email"));
+        emailCheckLogic(oAuth2User.getAttribute("hd"));
 
         String providerId = oAuth2User.getName();
         String email = oAuth2User.getAttribute("email");
@@ -66,7 +66,6 @@ public class OAuthService implements OAuth2UserService<OAuth2UserRequest, OAuth2
         Collection<GrantedAuthority> authorities = new ArrayList<>(oAuth2User.getAuthorities());
         authorities.add(new SimpleGrantedAuthority(role.name()));
 
-
         return new UserInfo(authorities, attributes, nameAttribute);
     }
 
@@ -86,16 +85,14 @@ public class OAuthService implements OAuth2UserService<OAuth2UserRequest, OAuth2
         return savedUser;
     }
 
-    private void emailCheckLogic(String email){
-        String emailDomain;
-
+    private void emailCheckLogic(String emailId){
         try {
-            emailDomain = emailUtil.getOauthEmailDomain(email);
+            emailUtil.getOauthEmailDomain(emailId);
         } catch (IllegalArgumentException e){
             throw new OAuth2AuthenticationException(e.getMessage());
         }
 
-        if (!emailDomain.equals(schoolDomain)) {
+        if (!emailId.equals(schoolDomain)) {
             throw new OAuth2AuthenticationException("학교 이메일이 아닙니다.");
         }
     }

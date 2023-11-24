@@ -11,15 +11,8 @@ public class EmailUtilImpl implements EmailUtil {
     private String emailIdRegex;
 
     @Override
-    public String getOauthEmailDomain(String email) {
-        int index = email.indexOf("@");
-
-        String emailId = email.substring(0, index);
-
-        if (emailId.matches(emailIdRegex)){
+    public void getOauthEmailDomain(String emailId) {
+        if (emailId.matches(emailIdRegex))
             throw new IllegalArgumentException("학생은 로그인할 수 없습니다.");
-        }
-
-        return email.substring(index + 1);
     }
 }
