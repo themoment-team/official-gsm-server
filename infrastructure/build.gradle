@@ -28,4 +28,8 @@ dependencies {
     /* mapper */
     implementation 'org.mapstruct:mapstruct:latest.release'
     implementation 'org.mapstruct:mapstruct-processor:latest.release'
+
+    /* redis */
+    implementation("org.springframework.session:spring-session-data-redis")
+    implementation 'io.lettuce:lettuce-core:6.2.3.RELEASE'
 }
