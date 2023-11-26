@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import team.themoment.officialgsm.domain.token.RefreshToken;
 import team.themoment.officialgsm.persistence.token.entity.RefreshTokenRedisEntity;
-import team.themoment.officialgsm.persistence.token.mapper.RefreshTokenMapper;
 import team.themoment.officialgsm.repository.token.RefreshTokenRepository;
 
 @Repository
