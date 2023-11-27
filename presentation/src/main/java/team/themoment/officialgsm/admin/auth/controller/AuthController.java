@@ -36,4 +36,9 @@ public class AuthController {
         UserInfoDto userInfoDto = findUserInfoUseCase.execute();
         return ResponseEntity.ok(new UserInfoResponse(userInfoDto.getUserName(), userInfoDto.getRole(), userInfoDto.getUserEmail()));
     }
+
+    @DeleteMapping("/logout")
+    public ResponseEntity<Void> logout() {
+        return ResponseEntity.noContent().build();
+    }
 }

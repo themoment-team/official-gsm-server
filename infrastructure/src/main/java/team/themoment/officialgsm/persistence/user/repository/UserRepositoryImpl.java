@@ -16,13 +16,18 @@ public class UserRepositoryImpl implements UserRepository {
     private final UserMapper userMapper;
 
     @Override
-    public void save(User user) {
-        userJpaRepository.save(userMapper.toEntity(user));
+    public User save(User user) {
+        return userMapper.toDomain(userJpaRepository.save(userMapper.toEntity(user)));
     }
 
     @Override
     public Optional<User> findByOauthId(String oauthId) {
         Optional<UserJpaEntity> user = userJpaRepository.findByOauthId(oauthId);
         return user.map(userMapper::toDomain);
+    }
+
+    @Override
+    public void deleteAll() {
+        userJpaRepository.deleteAll();
     }
 }
