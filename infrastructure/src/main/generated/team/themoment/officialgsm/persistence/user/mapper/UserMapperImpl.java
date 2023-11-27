@@ -9,7 +9,7 @@ import team.themoment.officialgsm.persistence.user.entity.UserJpaEntity;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-11-27T15:36:35+0900",
+    date = "2023-11-27T16:51:39+0900",
     comments = "version: 1.5.3.Final, compiler: javac, environment: Java 17.0.8.1 (Amazon.com Inc.)"
 )
 @Component
