@@ -33,16 +33,14 @@ public class AuthController {
     public ResponseEntity<Void> nameModify(
             @Valid @RequestBody UserNameModifyRequest request
     ) {
-        // mapper 사용
-        modifyNameUseCase.execute(new UserNameDto(request.getUserName()));
+        modifyNameUseCase.execute(userNameDataMapper.toDto(request));
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/userinfo")
     public ResponseEntity<UserInfoResponse> userInfoFind() {
-        // mapper 사용
         UserInfoDto userInfoDto = findUserInfoUseCase.execute();
-        return ResponseEntity.ok(new UserInfoResponse(userInfoDto.getUserName(), userInfoDto.getRole(), userInfoDto.getUserEmail()));
+        return ResponseEntity.ok(userNameDataMapper.toInfoResponse(userInfoDto));
     }
 
     @DeleteMapping("/logout")
