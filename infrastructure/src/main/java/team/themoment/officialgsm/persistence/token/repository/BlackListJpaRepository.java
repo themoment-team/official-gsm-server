@@ -8,5 +8,5 @@ import team.themoment.officialgsm.persistence.token.entity.BlackListRedisEntity;
 import java.util.Optional;
 
 public interface BlackListJpaRepository extends CrudRepository<BlackListRedisEntity, String> {
-    Optional<BlackList> findByAccessToken(String accessToken);
+    Optional<BlackListRedisEntity> findByAccessToken(String accessToken);
 }

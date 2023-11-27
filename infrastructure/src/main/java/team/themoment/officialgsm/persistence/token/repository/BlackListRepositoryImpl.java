@@ -24,6 +24,11 @@ public class BlackListRepositoryImpl implements BlackListRepository {
 
     @Override
     public Optional<BlackList> findByAccessToken(String accessToken) {
-        return blackListJpaRepository.findByAccessToken(accessToken);
+        Optional<BlackListRedisEntity> blackList = blackListJpaRepository.findByAccessToken(accessToken);
+
+        return blackList.isPresent() ? Optional.of(new BlackList(
+                blackList.get().getOauthId(),
+                blackList.get().getAccessToken(),
+                blackList.get().getTimeToLive())) : Optional.empty();
     }
 }

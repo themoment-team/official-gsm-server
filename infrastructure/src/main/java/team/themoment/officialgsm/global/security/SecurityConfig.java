@@ -8,6 +8,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import team.themoment.officialgsm.global.security.filter.JwtRequestFilter;
+import team.themoment.officialgsm.global.security.handler.ExceptionHandlerFilter;
 import team.themoment.officialgsm.global.security.service.OAuthService;
 
 @Configuration
@@ -15,6 +18,8 @@ import team.themoment.officialgsm.global.security.service.OAuthService;
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final OAuthService oAuthService;
+    private final ExceptionHandlerFilter exceptionHandlerFilter;
+    private final JwtRequestFilter jwtRequestFilter;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -31,6 +36,10 @@ public class SecurityConfig {
         );
 
         http.oauth2Login(oauth -> oauth.userInfoEndpoint(u -> u.userService(oAuthService)));
+
+        http
+                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(exceptionHandlerFilter, JwtRequestFilter.class);
 
         return http.build();
     }

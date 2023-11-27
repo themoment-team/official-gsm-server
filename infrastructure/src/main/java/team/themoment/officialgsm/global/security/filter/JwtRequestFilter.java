@@ -12,9 +12,15 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import team.themoment.officialgsm.common.exception.CustomException;
+import team.themoment.officialgsm.common.exception.CustomHttpStatus;
 import team.themoment.officialgsm.common.util.ConstantsUtil;
 import team.themoment.officialgsm.common.util.CookieUtil;
+import team.themoment.officialgsm.domain.token.BlackList;
 import team.themoment.officialgsm.global.security.jwt.JwtTokenProvider;
+import team.themoment.officialgsm.persistence.token.entity.BlackListRedisEntity;
+import team.themoment.officialgsm.persistence.token.repository.BlackListRepositoryImpl;
+import team.themoment.officialgsm.repository.token.BlackListRepository;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -23,7 +29,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Slf4j
 public class JwtRequestFilter extends OncePerRequestFilter {
-    private final BlackListRepository blackListRepository;
+    private final BlackListRepositoryImpl blackListRepository;
     private final JwtTokenProvider jwtProvider;
     private final CookieUtil cookieUtil;
 
@@ -38,8 +44,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         String token = cookieUtil.getCookieValue(request, ConstantsUtil.accessToken);
         if (token != null) {
             Optional<BlackList> blackList = blackListRepository.findByAccessToken(token);
-            if (blackList.isPresent() && blackList.get().getAccessToken().equals(token)) {
-                throw new CustomException("Invalid Token", HttpStatus.UNAUTHORIZED);
+            if (blackList.isPresent() && blackList.get().accessToken().equals(token)) {
+                throw new CustomException("Invalid Token", CustomHttpStatus.UNAUTHORIZED);
             }
             UsernamePasswordAuthenticationToken auth = jwtProvider.authentication(token);
             SecurityContextHolder.getContext().setAuthentication(auth);
