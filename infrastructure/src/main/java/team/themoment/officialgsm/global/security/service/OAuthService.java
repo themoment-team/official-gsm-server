@@ -17,10 +17,12 @@ import team.themoment.officialgsm.common.util.CookieUtil;
 import team.themoment.officialgsm.common.util.EmailUtil;
 import team.themoment.officialgsm.domain.token.RefreshToken;
 import team.themoment.officialgsm.domain.user.Role;
+import team.themoment.officialgsm.domain.user.User;
 import team.themoment.officialgsm.global.security.jwt.JwtTokenProvider;
 import team.themoment.officialgsm.persistence.user.entity.UserJpaEntity;
-import team.themoment.officialgsm.persistence.user.repository.UserJpaRepository;
+import team.themoment.officialgsm.persistence.user.mapper.UserMapper;
 import team.themoment.officialgsm.repository.token.RefreshTokenRepository;
+import team.themoment.officialgsm.repository.user.UserRepository;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -34,11 +36,12 @@ public class OAuthService implements OAuth2UserService<OAuth2UserRequest, OAuth2
 
     private final OAuth2UserService<OAuth2UserRequest, OAuth2User> delegateOauth2UserService = new DefaultOAuth2UserService();
     private final HttpServletResponse httpServletResponse;
-    private final UserJpaRepository userJpaRepository;
+    private final UserRepository userRepository;
     private final RefreshTokenRepository refreshTokenRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final EmailUtil emailUtil;
     private final CookieUtil cookieUtil;
+    private final UserMapper userMapper;
 
     @Value("${domain}")
     private String schoolDomain;
@@ -74,8 +77,9 @@ public class OAuthService implements OAuth2UserService<OAuth2UserRequest, OAuth2
     }
 
     private UserJpaEntity getUser(String providerId, String email, String name) {
-        UserJpaEntity savedUser = userJpaRepository.findByOauthId(providerId)
+        User savedUser = userRepository.findByOauthId(providerId)
                 .orElse(null);
+
         if (savedUser == null) {
             UserJpaEntity user = UserJpaEntity.builder()
                     .oauthId(providerId)
@@ -84,9 +88,10 @@ public class OAuthService implements OAuth2UserService<OAuth2UserRequest, OAuth2
                     .role(UNAPPROVED)
                     .requestedAt(LocalDateTime.now())
                     .build();
-            return userJpaRepository.save(user);
+            userRepository.save(userMapper.toDomain(user));
+            return user;
         }
-        return savedUser;
+        return userMapper.toEntity(savedUser);
     }
 
     private void emailCheckLogic(String email){
