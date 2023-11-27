@@ -54,9 +54,8 @@ public class OAuthService implements OAuth2UserService<OAuth2UserRequest, OAuth2
 
         String providerId = oAuth2User.getName();
         String email = oAuth2User.getAttribute("email");
-        String name = oAuth2User.getAttribute("name");
 
-        UserJpaEntity user = getUser(providerId, email, name);
+        UserJpaEntity user = getUser(providerId, email);
         String nameAttribute = "id";
         Long id = user.getUserSeq();
         Role role = user.getRole();
@@ -65,7 +64,6 @@ public class OAuthService implements OAuth2UserService<OAuth2UserRequest, OAuth2
                 "oauthId", providerId,
                 "role", role,
                 "userEmail", email,
-                "userName", name,
                 "requestedAt", LocalDateTime.now()
         ));
         Collection<GrantedAuthority> authorities = new ArrayList<>(oAuth2User.getAuthorities());
@@ -76,7 +74,7 @@ public class OAuthService implements OAuth2UserService<OAuth2UserRequest, OAuth2
         return new UserInfo(authorities, attributes, nameAttribute);
     }
 
-    private UserJpaEntity getUser(String providerId, String email, String name) {
+    private UserJpaEntity getUser(String providerId, String email) {
         User savedUser = userRepository.findByOauthId(providerId)
                 .orElse(null);
 
@@ -84,7 +82,7 @@ public class OAuthService implements OAuth2UserService<OAuth2UserRequest, OAuth2
             UserJpaEntity user = UserJpaEntity.builder()
                     .oauthId(providerId)
                     .userEmail(email)
-                    .userName(name)
+                    .userName(null)
                     .role(UNAPPROVED)
                     .requestedAt(LocalDateTime.now())
                     .build();
