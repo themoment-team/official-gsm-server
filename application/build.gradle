@@ -11,6 +11,10 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 
 	implementation group: 'org.springframework', name: 'spring-tx', version: '6.1.1'
+
+	/* redis */
+	implementation("org.springframework.session:spring-session-data-redis")
+	implementation 'io.lettuce:lettuce-core:6.2.3.RELEASE'
 }
 
 tasks.named('test') {
