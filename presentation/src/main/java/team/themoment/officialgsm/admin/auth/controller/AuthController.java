@@ -1,11 +1,11 @@
-package team.themoment.officialgsm.client.auth.controller;
+package team.themoment.officialgsm.admin.auth.controller;
 
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import team.themoment.officialgsm.client.auth.dto.request.UserNameModifyRequest;
+import team.themoment.officialgsm.admin.auth.dto.request.UserNameModifyRequest;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -15,6 +15,6 @@ public class AuthController {
     public ResponseEntity<Void> nameModify(
             @Valid @RequestBody UserNameModifyRequest request
     ) {
-
+        return ResponseEntity.ok().build();
     }
 }

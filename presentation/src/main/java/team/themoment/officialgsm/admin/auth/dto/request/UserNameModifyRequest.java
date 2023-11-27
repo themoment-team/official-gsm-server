@@ -1,4 +1,4 @@
-package team.themoment.officialgsm.client.auth.dto.request;
+package team.themoment.officialgsm.admin.auth.dto.request;
 
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;

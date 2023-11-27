@@ -9,6 +9,8 @@ dependencies {
 
 	/* spring app */
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+
+	implementation group: 'org.springframework', name: 'spring-tx', version: '6.1.1'
 }
 
 tasks.named('test') {
