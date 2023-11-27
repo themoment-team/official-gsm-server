@@ -31,7 +31,7 @@ public class JwtTokenProvider {
     private String refreshSecret;
     private final AuthDetailsService authDetailsService;
     private final long ACCESS_TOKEN_EXPIRE_TIME = 60 * 60 * 2 * 1000L;
-    private final long REFRESH_TOKEN_EXPIRE_TIME = ACCESS_TOKEN_EXPIRE_TIME * 12 * 21;
+    private final long REFRESH_TOKEN_EXPIRE_TIME = ACCESS_TOKEN_EXPIRE_TIME * 12;
 
     @AllArgsConstructor
     public enum TokenType{
