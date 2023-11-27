@@ -6,9 +6,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import team.themoment.officialgsm.admin.auth.dto.request.UserNameModifyRequest;
+import team.themoment.officialgsm.admin.auth.dto.response.UserInfoResponse;
 import team.themoment.officialgsm.admin.auth.mapper.UserNameDataMapper;
 import team.themoment.officialgsm.domain.auth.dto.UserNameDto;
 import team.themoment.officialgsm.domain.auth.usecase.ModifyNameUseCase;
+import team.themoment.officialgsm.domain.user.Role;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -23,6 +25,11 @@ public class AuthController {
     ) {
         // mapper 사용
         modifyNameUseCase.execute(new UserNameDto(request.getUserName()));
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/userinfo")
+    public ResponseEntity<UserInfoResponse>  userInfoFind() {
         return ResponseEntity.ok().build();
     }
 }
