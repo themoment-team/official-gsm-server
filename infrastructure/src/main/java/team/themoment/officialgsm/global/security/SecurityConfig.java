@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import team.themoment.officialgsm.domain.user.Role;
 import team.themoment.officialgsm.global.security.filter.JwtRequestFilter;
 import team.themoment.officialgsm.global.security.handler.ExceptionHandlerFilter;
 import team.themoment.officialgsm.global.security.service.OAuthService;
@@ -31,7 +32,6 @@ public class SecurityConfig {
 
         http.authorizeHttpRequests((authorizeHttpRequests) ->
                 authorizeHttpRequests
-                        .requestMatchers("/test").authenticated()
                         .anyRequest().permitAll()
         );
 

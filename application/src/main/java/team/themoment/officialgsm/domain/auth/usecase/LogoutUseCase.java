@@ -1,9 +1,7 @@
 package team.themoment.officialgsm.domain.auth.usecase;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import team.themoment.officialgsm.common.annotation.UseCaseWithReadOnlyTransaction;
 import team.themoment.officialgsm.common.annotation.UseCaseWithTransaction;
 import team.themoment.officialgsm.common.exception.CustomException;
 import team.themoment.officialgsm.common.exception.CustomHttpStatus;

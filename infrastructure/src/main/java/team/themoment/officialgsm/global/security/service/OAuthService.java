@@ -55,10 +55,10 @@ public class OAuthService implements OAuth2UserService<OAuth2UserRequest, OAuth2
         String providerId = oAuth2User.getName();
         String email = oAuth2User.getAttribute("email");
 
-        UserJpaEntity user = getUser(providerId, email);
+        User user = getUser(providerId, email);
         String nameAttribute = "id";
-        Long id = user.getUserSeq();
-        Role role = user.getRole();
+        Long id = user.userSeq();
+        Role role = user.role();
         Map<String, Object> attributes = new HashMap<>(Map.of(
                 nameAttribute, id,
                 "oauthId", providerId,
@@ -69,12 +69,12 @@ public class OAuthService implements OAuth2UserService<OAuth2UserRequest, OAuth2
         Collection<GrantedAuthority> authorities = new ArrayList<>(oAuth2User.getAuthorities());
         authorities.add(new SimpleGrantedAuthority(role.name()));
 
-        cookieLogic(user);
+        cookieLogic(userMapper.toEntity(user));
 
         return new UserInfo(authorities, attributes, nameAttribute);
     }
 
-    private UserJpaEntity getUser(String providerId, String email) {
+    private User getUser(String providerId, String email) {
         User savedUser = userRepository.findByOauthId(providerId)
                 .orElse(null);
 
@@ -86,10 +86,9 @@ public class OAuthService implements OAuth2UserService<OAuth2UserRequest, OAuth2
                     .role(UNAPPROVED)
                     .requestedAt(LocalDateTime.now())
                     .build();
-            userRepository.save(userMapper.toDomain(user));
-            return user;
+            return userRepository.save(userMapper.toDomain(user));
         }
-        return userMapper.toEntity(savedUser);
+        return savedUser;
     }
 
     private void emailCheckLogic(String email){

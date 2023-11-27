@@ -1,5 +1,6 @@
 package team.themoment.officialgsm.persistence.token.mapper;
 
+import java.util.Optional;
 import javax.annotation.processing.Generated;
 import org.springframework.stereotype.Component;
 import team.themoment.officialgsm.domain.token.RefreshToken;
@@ -7,7 +8,7 @@ import team.themoment.officialgsm.persistence.token.entity.RefreshTokenRedisEnti
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-11-27T15:36:35+0900",
+    date = "2023-11-27T22:49:59+0900",
     comments = "version: 1.5.3.Final, compiler: javac, environment: Java 17.0.8.1 (Amazon.com Inc.)"
 )
 @Component
@@ -26,5 +27,16 @@ public class RefreshTokenMapperImpl implements RefreshTokenMapper {
         refreshTokenRedisEntity.expiredAt( refreshToken.expiredAt() );
 
         return refreshTokenRedisEntity.build();
+    }
+
+    @Override
+    public RefreshToken toDomain(Optional<RefreshTokenRedisEntity> refreshTokenRedisEntity) {
+        if ( refreshTokenRedisEntity == null ) {
+            return null;
+        }
+
+        RefreshToken.RefreshTokenBuilder refreshToken = RefreshToken.builder();
+
+        return refreshToken.build();
     }
 }
