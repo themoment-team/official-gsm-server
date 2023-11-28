@@ -1,6 +1,7 @@
 package team.themoment.officialgsm.global.security.filter;
 
 
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -34,6 +35,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     private final JwtTokenProvider jwtProvider;
     private final CookieUtil cookieUtil;
 
+    @Value("${jwt.accessSecret}")
+    private String accessSecret;
+
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         String path = request.getRequestURI();
@@ -46,7 +50,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         if (token != null) {
             Optional<BlackList> blackList = blackListRepository.findByAccessToken(token);
-            if (blackList.isPresent() && blackList.get().accessToken().equals(token)) {
+            if (blackList.isPresent() && token.equals(blackList.get().accessToken())) {
                 throw new CustomException("Invalid Token", CustomHttpStatus.UNAUTHORIZED);
             }
             UsernamePasswordAuthenticationToken auth = jwtProvider.authentication(token);

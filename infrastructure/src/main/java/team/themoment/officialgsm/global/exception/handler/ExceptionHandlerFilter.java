@@ -3,6 +3,7 @@ package team.themoment.officialgsm.global.exception.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nimbusds.common.contenttype.ContentType;
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,9 +28,9 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
             filterChain.doFilter(request, response);
-        } catch (CustomException e){
+        } catch (CustomException e) {
             errorMessageResponse(response, e);
-        } catch (Exception e){
+        } catch (Exception e) {
             log.info("알 수 없는 에러입니다.", e);
             unknownErrorMessageResponse(response, e);
         }

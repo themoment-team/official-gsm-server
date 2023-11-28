@@ -66,14 +66,17 @@ public class JwtTokenProvider {
 
     private Claims getTokenBody(String token, String secret){
         try {
+            if (token == null || token.isEmpty())
+                throw new JwtException("Invalid Token");
+
             return Jwts.parserBuilder()
                     .setSigningKey(getSignInKey(secret))
                     .build()
                     .parseClaimsJws(token)
                     .getBody();
-        } catch (ExpiredJwtException e){
+        } catch (ExpiredJwtException e) {
             throw new CustomException("Expired Token", CustomHttpStatus.UNAUTHORIZED);
-        } catch (JwtException e){
+        } catch (JwtException e) {
             throw new CustomException("Invalid Token", CustomHttpStatus.UNAUTHORIZED);
         }
     }
@@ -85,9 +88,9 @@ public class JwtTokenProvider {
                     .build()
                     .parseClaimsJws(token)
                     .getBody();
-        } catch (ExpiredJwtException e){
+        } catch (ExpiredJwtException e) {
             throw new CustomException("Expired RefreshToken", CustomHttpStatus.UNAUTHORIZED);
-        } catch (JwtException e){
+        } catch (JwtException e) {
             throw new CustomException("Invalid RefreshToken", CustomHttpStatus.UNAUTHORIZED);
         }
     }
