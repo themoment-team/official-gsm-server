@@ -9,7 +9,7 @@ import team.themoment.officialgsm.persistence.user.entity.UserJpaEntity;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-11-27T16:51:39+0900",
+    date = "2023-11-28T14:36:24+0900",
     comments = "version: 1.5.3.Final, compiler: javac, environment: Java 17.0.8.1 (Amazon.com Inc.)"
 )
 @Component
@@ -23,7 +23,6 @@ public class UserMapperImpl implements UserMapper {
 
         UserJpaEntity.UserJpaEntityBuilder userJpaEntity = UserJpaEntity.builder();
 
-        userJpaEntity.userSeq( user.userSeq() );
         userJpaEntity.oauthId( user.oauthId() );
         userJpaEntity.userName( user.userName() );
         userJpaEntity.userEmail( user.userEmail() );
@@ -41,7 +40,6 @@ public class UserMapperImpl implements UserMapper {
             return null;
         }
 
-        Long userSeq = null;
         String oauthId = null;
         String userName = null;
         String userEmail = null;
@@ -50,7 +48,6 @@ public class UserMapperImpl implements UserMapper {
         LocalDateTime approvedAt = null;
         LocalDateTime requestedAt = null;
 
-        userSeq = userJpaEntity.getUserSeq();
         oauthId = userJpaEntity.getOauthId();
         userName = userJpaEntity.getUserName();
         userEmail = userJpaEntity.getUserEmail();
@@ -59,7 +56,7 @@ public class UserMapperImpl implements UserMapper {
         approvedAt = userJpaEntity.getApprovedAt();
         requestedAt = userJpaEntity.getRequestedAt();
 
-        User user = new User( userSeq, oauthId, userName, userEmail, role, grantor, approvedAt, requestedAt );
+        User user = new User( oauthId, userName, userEmail, role, grantor, approvedAt, requestedAt );
 
         return user;
     }
@@ -71,7 +68,6 @@ public class UserMapperImpl implements UserMapper {
 
         UserJpaEntity.UserJpaEntityBuilder userJpaEntity = UserJpaEntity.builder();
 
-        userJpaEntity.userSeq( user.userSeq() );
         userJpaEntity.oauthId( user.oauthId() );
         userJpaEntity.userName( user.userName() );
         userJpaEntity.userEmail( user.userEmail() );
@@ -88,7 +84,6 @@ public class UserMapperImpl implements UserMapper {
             return null;
         }
 
-        Long userSeq = null;
         String oauthId = null;
         String userName = null;
         String userEmail = null;
@@ -97,7 +92,6 @@ public class UserMapperImpl implements UserMapper {
         LocalDateTime approvedAt = null;
         LocalDateTime requestedAt = null;
 
-        userSeq = userJpaEntity.getUserSeq();
         oauthId = userJpaEntity.getOauthId();
         userName = userJpaEntity.getUserName();
         userEmail = userJpaEntity.getUserEmail();
@@ -106,7 +100,7 @@ public class UserMapperImpl implements UserMapper {
         approvedAt = userJpaEntity.getApprovedAt();
         requestedAt = userJpaEntity.getRequestedAt();
 
-        User user = new User( userSeq, oauthId, userName, userEmail, role, grantor, approvedAt, requestedAt );
+        User user = new User( oauthId, userName, userEmail, role, grantor, approvedAt, requestedAt );
 
         return user;
     }

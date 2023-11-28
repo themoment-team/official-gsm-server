@@ -56,11 +56,9 @@ public class OAuthService implements OAuth2UserService<OAuth2UserRequest, OAuth2
         String email = oAuth2User.getAttribute("email");
 
         User user = getUser(providerId, email);
-        String nameAttribute = "id";
-        Long id = user.userSeq();
+        String nameAttribute = "oauthId";
         Role role = user.role();
         Map<String, Object> attributes = new HashMap<>(Map.of(
-                nameAttribute, id,
                 "oauthId", providerId,
                 "role", role,
                 "userEmail", email,

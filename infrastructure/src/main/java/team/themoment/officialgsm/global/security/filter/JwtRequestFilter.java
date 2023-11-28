@@ -34,9 +34,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     private final JwtTokenProvider jwtProvider;
     private final CookieUtil cookieUtil;
 
-    @Value("${jwt.accessSecret}")
-    private String accessSecret;
-
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         String path = request.getRequestURI();
@@ -46,9 +43,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException, CustomException {
         String token = cookieUtil.getCookieValue(request, ConstantsUtil.accessToken);
-
-        if (!jwtProvider.isValidToken(token, accessSecret))
-            throw new CustomException("Invalid Token", CustomHttpStatus.UNAUTHORIZED);
 
         if (token != null) {
             Optional<BlackList> blackList = blackListRepository.findByAccessToken(token);

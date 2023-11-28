@@ -22,7 +22,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public Optional<User> findByOauthId(String oauthId) {
-        Optional<UserJpaEntity> user = userJpaRepository.findByOauthId(oauthId);
+        Optional<UserJpaEntity> user = userJpaRepository.findById(oauthId);
         return user.map(userMapper::toDomain);
     }
 

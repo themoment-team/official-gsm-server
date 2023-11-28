@@ -4,6 +4,5 @@ import team.themoment.officialgsm.persistence.user.entity.UserJpaEntity;
 
 import java.util.Optional;
 
-public interface UserJpaRepository extends JpaRepository<UserJpaEntity, Long> {
-    Optional<UserJpaEntity> findByOauthId(String oauthId);
+public interface UserJpaRepository extends JpaRepository<UserJpaEntity, String> {
 }
