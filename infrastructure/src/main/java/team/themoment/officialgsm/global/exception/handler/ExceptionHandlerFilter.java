@@ -1,4 +1,4 @@
-package team.themoment.officialgsm.global.security.handler;
+package team.themoment.officialgsm.global.exception.handler;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;

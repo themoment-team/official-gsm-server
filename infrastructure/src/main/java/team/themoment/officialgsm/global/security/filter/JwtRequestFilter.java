@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -33,6 +34,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     private final JwtTokenProvider jwtProvider;
     private final CookieUtil cookieUtil;
 
+    @Value("${jwt.accessSecret}")
+    private String accessSecret;
+
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         String path = request.getRequestURI();
@@ -40,8 +44,12 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException, CustomException {
         String token = cookieUtil.getCookieValue(request, ConstantsUtil.accessToken);
+
+        if (!jwtProvider.isValidToken(token, accessSecret))
+            throw new CustomException("Invalid Token", CustomHttpStatus.UNAUTHORIZED);
+
         if (token != null) {
             Optional<BlackList> blackList = blackListRepository.findByAccessToken(token);
             if (blackList.isPresent() && blackList.get().accessToken().equals(token)) {

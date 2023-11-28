@@ -19,6 +19,6 @@ public class UserUtilImpl implements UserUtil {
     public User getCurrentUser() {
         String oauthId = SecurityContextHolder.getContext().getAuthentication().getName();
         return userRepository.findByOauthId(oauthId)
-                .orElseThrow(() -> new CustomException("요청하신 oauthId:{}는 존재하지 않습니다.", CustomHttpStatus.INTERNAL_SERVER_ERROR));
+                .orElseThrow(() -> new CustomException("요청하신 oauthId는 존재하지 않습니다.", CustomHttpStatus.INTERNAL_SERVER_ERROR));
     }
 }

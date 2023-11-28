@@ -72,9 +72,9 @@ public class JwtTokenProvider {
                     .parseClaimsJws(token)
                     .getBody();
         } catch (ExpiredJwtException e){
-            throw new CustomException("토큰이 만료되었습니다.", CustomHttpStatus.UNAUTHORIZED);
+            throw new CustomException("Expired Token", CustomHttpStatus.UNAUTHORIZED);
         } catch (JwtException e){
-            throw new CustomException("검증되지 않은 토큰입니다.", CustomHttpStatus.UNAUTHORIZED);
+            throw new CustomException("Invalid Token", CustomHttpStatus.UNAUTHORIZED);
         }
     }
 
@@ -86,9 +86,9 @@ public class JwtTokenProvider {
                     .parseClaimsJws(token)
                     .getBody();
         } catch (ExpiredJwtException e){
-            throw new CustomException("리프레시 토큰이 만료되었습니다.", CustomHttpStatus.UNAUTHORIZED);
+            throw new CustomException("Expired RefreshToken", CustomHttpStatus.UNAUTHORIZED);
         } catch (JwtException e){
-            throw new CustomException("검증되지 않은 리프레시 토큰입니다.", CustomHttpStatus.UNAUTHORIZED);
+            throw new CustomException("Invalid RefreshToken", CustomHttpStatus.UNAUTHORIZED);
         }
     }
 
