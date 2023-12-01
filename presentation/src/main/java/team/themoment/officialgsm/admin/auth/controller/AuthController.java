@@ -1,7 +1,7 @@
 package team.themoment.officialgsm.admin.auth.controller;
 
-
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -12,12 +12,11 @@ import team.themoment.officialgsm.admin.auth.mapper.UserNameDataMapper;
 import team.themoment.officialgsm.common.util.ConstantsUtil;
 import team.themoment.officialgsm.common.util.CookieUtil;
 import team.themoment.officialgsm.domain.auth.dto.UserInfoDto;
-import team.themoment.officialgsm.domain.auth.dto.UserNameDto;
 import team.themoment.officialgsm.domain.auth.usecase.FindUserInfoUseCase;
 import team.themoment.officialgsm.domain.auth.usecase.LogoutUseCase;
 import team.themoment.officialgsm.domain.auth.usecase.ModifyNameUseCase;
+import team.themoment.officialgsm.domain.auth.usecase.TokenReissueUseCase;
 
-import java.util.Arrays;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -27,6 +26,7 @@ public class AuthController {
     private final FindUserInfoUseCase findUserInfoUseCase;
     private final CookieUtil cookieUtil;
     private final LogoutUseCase logoutUseCase;
+    private final TokenReissueUseCase tokenReissueUseCase;
     private final UserNameDataMapper userNameDataMapper;
 
     @PatchMapping("/username")
@@ -50,8 +50,13 @@ public class AuthController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/test")
-    public ResponseEntity<String> test() {
-        return ResponseEntity.ok("OK!");
+    @GetMapping("/token/refresh")
+    public ResponseEntity<Void> tokenReissue (
+            HttpServletRequest request,
+            HttpServletResponse response
+    ) {
+        String token = cookieUtil.getCookieValue(request, ConstantsUtil.refreshToken);
+        tokenReissueUseCase.execute(token, response);
+        return ResponseEntity.ok().build();
     }
 }

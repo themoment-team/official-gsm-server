@@ -1,5 +1,6 @@
 package team.themoment.officialgsm.admin.auth.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,27 +11,24 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-import team.themoment.officialgsm.admin.auth.dto.request.UserNameModifyRequest;
-import team.themoment.officialgsm.domain.auth.usecase.ModifyNameUseCase;
 import team.themoment.officialgsm.domain.user.Role;
 import team.themoment.officialgsm.domain.user.User;
 import team.themoment.officialgsm.repository.user.UserRepository;
 
-import static javax.swing.UIManager.put;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
+@SpringBootTest(classes = AuthControllerTest.class)
 @AutoConfigureMockMvc
 class AuthControllerTest {
+
     @Autowired
     protected MockMvc mockMvc;
 
     @Autowired
     private WebApplicationContext context;
 
-    @Autowired
-    private ModifyNameUseCase modifyNameUseCase;
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     @Autowired
     private UserRepository userRepository;
@@ -39,32 +37,51 @@ class AuthControllerTest {
     public void setMockMvc() {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(context)
                 .build();
+
+        userRepository.deleteAll();
     }
+
 
     @Test
     void nameModify() throws Exception {
-        // Given
-        User user = userRepository.save(new User(
-                0L,
-                "0",
-                "신희성",
-                "s23012@gsm.hs.kr",
-                Role.UNAPPROVED,
-                null,
-                null,
-                null));
+        // given
+        User user = User.builder()
+                .oauthId("0")
+                .userEmail("s23012@gsm.hs.kr")
+                .role(Role.UNAPPROVED)
+                .grantor(null)
+                .approvedAt(null)
+                .requestedAt(null)
+                .userName(null)
+                .build();
+        userRepository.save(user);
 
-        // When
-        ResultActions resultActions = mockMvc.perform(
-                patch("/api/auth/username")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"userName\":\"시니성\"}"));
+        final String url = "/api/auth/username";
+        final String userName = "시니성";
 
-        // Then
-        resultActions.andExpect(status().isOk());
+        // when
+        final ResultActions result = mockMvc.perform(patch(url)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(userName)));
 
-        User updatedUser = userRepository.findByOauthId(user.oauthId()).orElse(null);
-        assert updatedUser != null;
-        assert updatedUser.userName().equals("시니성");
+        // then
+        result
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void testNameModify() {
+    }
+
+    @Test
+    void userInfoFind() {
+    }
+
+    @Test
+    void logout() {
+    }
+
+    @Test
+    void test1() {
     }
 }

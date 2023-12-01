@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import team.themoment.officialgsm.common.exception.CustomException;
 import team.themoment.officialgsm.common.exception.CustomHttpStatus;
+import team.themoment.officialgsm.domain.auth.spi.TokenProvider;
 import team.themoment.officialgsm.global.security.auth.AuthDetailsService;
 
 import java.nio.charset.StandardCharsets;
@@ -24,13 +25,15 @@ import java.util.Date;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class JwtTokenProvider {
+public class JwtTokenProvider implements TokenProvider {
     @Value("${jwt.accessSecret}")
     private String accessSecret;
     @Value("${jwt.refreshSecret}")
     private String refreshSecret;
     private final AuthDetailsService authDetailsService;
+    @Getter
     private final long ACCESS_TOKEN_EXPIRE_TIME = 60 * 60 * 2 * 1000L;
+    @Getter
     private final long REFRESH_TOKEN_EXPIRE_TIME = ACCESS_TOKEN_EXPIRE_TIME * 12;
 
     @AllArgsConstructor
@@ -121,4 +124,8 @@ public class JwtTokenProvider {
         return isExpiredToken(token, secret);
     }
 
+    @Override
+    public String getRefreshSecert() {
+        return refreshSecret;
+    }
 }

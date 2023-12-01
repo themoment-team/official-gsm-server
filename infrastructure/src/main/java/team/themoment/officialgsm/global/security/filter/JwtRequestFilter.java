@@ -18,11 +18,14 @@ import team.themoment.officialgsm.common.exception.CustomException;
 import team.themoment.officialgsm.common.exception.CustomHttpStatus;
 import team.themoment.officialgsm.common.util.ConstantsUtil;
 import team.themoment.officialgsm.common.util.CookieUtil;
+import team.themoment.officialgsm.common.util.UserUtil;
 import team.themoment.officialgsm.domain.token.BlackList;
+import team.themoment.officialgsm.domain.user.User;
 import team.themoment.officialgsm.global.security.jwt.JwtTokenProvider;
 import team.themoment.officialgsm.persistence.token.entity.BlackListRedisEntity;
 import team.themoment.officialgsm.persistence.token.repository.BlackListRepositoryImpl;
 import team.themoment.officialgsm.repository.token.BlackListRepository;
+import team.themoment.officialgsm.repository.user.UserRepository;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -32,8 +35,10 @@ import java.util.Optional;
 @Slf4j
 public class JwtRequestFilter extends OncePerRequestFilter {
     private final BlackListRepositoryImpl blackListRepository;
+    private final UserRepository userRepository;
     private final JwtTokenProvider jwtProvider;
     private final CookieUtil cookieUtil;
+    private final UserUtil userUtil;
 
     @Value("${jwt.accessSecret}")
     private String accessSecret;
@@ -56,6 +61,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             UsernamePasswordAuthenticationToken auth = jwtProvider.authentication(token);
             SecurityContextHolder.getContext().setAuthentication(auth);
         }
+
         filterChain.doFilter(request, response);
     }
 }

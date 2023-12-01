@@ -9,4 +9,11 @@ public record RefreshToken(
         String refreshToken,
         Long expiredAt
 ) {
+    public RefreshToken updateRefreshToken(String refreshToken) {
+        return new RefreshToken(
+                this.oauthId,
+                refreshToken,
+                this.expiredAt
+        );
+    }
 }

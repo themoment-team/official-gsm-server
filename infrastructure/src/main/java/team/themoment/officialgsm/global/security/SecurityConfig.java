@@ -8,9 +8,12 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import team.themoment.officialgsm.common.util.CookieUtil;
 import team.themoment.officialgsm.global.security.filter.JwtRequestFilter;
 import team.themoment.officialgsm.global.exception.handler.ExceptionHandlerFilter;
+import team.themoment.officialgsm.global.security.handler.CustomAuthenticationEntryPointHandler;
 import team.themoment.officialgsm.global.security.service.OAuthService;
 
 @Configuration
@@ -18,8 +21,10 @@ import team.themoment.officialgsm.global.security.service.OAuthService;
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final OAuthService oAuthService;
+    private final CookieUtil cookieUtil;
     private final ExceptionHandlerFilter exceptionHandlerFilter;
     private final JwtRequestFilter jwtRequestFilter;
+    private final AuthenticationFailureHandler authenticationFailureHandler;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -31,13 +36,16 @@ public class SecurityConfig {
 
         http.authorizeHttpRequests((authorizeHttpRequests) ->
                 authorizeHttpRequests
-                        .requestMatchers("/api/auth/test").authenticated()
-                        .requestMatchers("/api/auth/userinfo").authenticated()
-                        .requestMatchers("/api/auth/username").authenticated()
+                        .requestMatchers("/api/auth/token/refresh").permitAll()
+                        .requestMatchers("/api/auth/**").authenticated()
                         .anyRequest().permitAll()
         );
 
         http.oauth2Login(oauth -> oauth.userInfoEndpoint(u -> u.userService(oAuthService)));
+        http.oauth2Login(oauth -> oauth.failureHandler(authenticationFailureHandler));
+
+        http.exceptionHandling(exception ->
+                exception.authenticationEntryPoint(new CustomAuthenticationEntryPointHandler(cookieUtil)));
 
         http
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)

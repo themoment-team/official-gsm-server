@@ -1,7 +1,10 @@
 package team.themoment.officialgsm.domain.user;
 
+import lombok.Builder;
+
 import java.time.LocalDateTime;
 
+@Builder
 public record User(
         String oauthId,
         String userName,
