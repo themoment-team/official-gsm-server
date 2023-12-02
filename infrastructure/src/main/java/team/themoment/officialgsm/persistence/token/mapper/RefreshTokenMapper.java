@@ -14,5 +14,5 @@ import java.util.Optional;
 )
 public interface RefreshTokenMapper {
     RefreshTokenRedisEntity toEntity(RefreshToken refreshToken);
-    RefreshToken toDomain(Optional<RefreshTokenRedisEntity> refreshTokenRedisEntity);
+    RefreshToken toDomain(RefreshTokenRedisEntity refreshTokenRedisEntity);
 }

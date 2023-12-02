@@ -39,7 +39,7 @@ public class TokenReissueUseCase {
         String newAccessToken = tokenProvider.generatedAccessToken(oauthId);
         String newRefreshToken = tokenProvider.generatedRefreshToken(oauthId);
 
-        if (user.oauthId().equals(refreshToken.oauthId()) || !refreshToken.refreshToken().equals(token) && !tokenProvider.isValidToken(token, secret)) {
+        if (!user.oauthId().equals(refreshToken.oauthId()) || !refreshToken.refreshToken().equals(token) && !tokenProvider.isValidToken(token, secret)) {
             throw new CustomException("리프레시 토큰이 유효하지 않습니다.", CustomHttpStatus.BADREQUEST);
         }
 
