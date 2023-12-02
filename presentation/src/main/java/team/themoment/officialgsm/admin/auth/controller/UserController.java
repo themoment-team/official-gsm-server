@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import team.themoment.officialgsm.admin.auth.dto.request.UserNameModifyRequest;
@@ -29,6 +30,7 @@ public class UserController {
     private final TokenReissueUseCase tokenReissueUseCase;
     private final AuthDataMapper userDataMapper;
     private final UnapprovedListUseCase unapprovedListUseCase;
+    private final ApprovedUseCase approvedUseCase;
 
     @PatchMapping("/username")
     public ResponseEntity<Void> nameModify(
@@ -64,5 +66,11 @@ public class UserController {
     @GetMapping("/unapproved/list")
     public ResponseEntity<List<UnapprovedListResponse>> unapprovedListFind() {
         return ResponseEntity.ok(userDataMapper.toUnapprovedListResponse(unapprovedListUseCase.execute()));
+    }
+
+    @PatchMapping("/approved/{userSeq}")
+    public ResponseEntity<Void> approved(@PathVariable String userSeq) {
+        approvedUseCase.execute(userSeq);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 }
