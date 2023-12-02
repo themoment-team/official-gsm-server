@@ -31,6 +31,7 @@ public class UserController {
     private final AuthDataMapper userDataMapper;
     private final UnapprovedListUseCase unapprovedListUseCase;
     private final ApprovedUseCase approvedUseCase;
+    private final RefuseApprovedUseCase refuseApprovedUseCase;
 
     @PatchMapping("/username")
     public ResponseEntity<Void> nameModify(
@@ -72,5 +73,11 @@ public class UserController {
     public ResponseEntity<Void> approved(@PathVariable String userSeq) {
         approvedUseCase.execute(userSeq);
         return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/approved/{userSeq}")
+    public ResponseEntity<Void> refuseApproved(@PathVariable String userSeq) {
+        refuseApprovedUseCase.execute(userSeq);
+        return ResponseEntity.noContent().build();
     }
 }
