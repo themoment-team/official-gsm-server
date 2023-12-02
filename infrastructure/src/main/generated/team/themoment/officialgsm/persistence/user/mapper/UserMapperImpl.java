@@ -1,5 +1,7 @@
 package team.themoment.officialgsm.persistence.user.mapper;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.annotation.processing.Generated;
 import org.springframework.stereotype.Component;
 import team.themoment.officialgsm.domain.user.User;
@@ -7,7 +9,7 @@ import team.themoment.officialgsm.persistence.user.entity.UserJpaEntity;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-12-01T23:54:17+0900",
+    date = "2023-12-02T22:09:08+0900",
     comments = "version: 1.5.3.Final, compiler: javac, environment: Java 17.0.8.1 (Amazon.com Inc.)"
 )
 @Component
@@ -49,6 +51,20 @@ public class UserMapperImpl implements UserMapper {
         user.requestedAt( userJpaEntity.getRequestedAt() );
 
         return user.build();
+    }
+
+    @Override
+    public List<User> toDomainList(List<UserJpaEntity> userJpaEntity) {
+        if ( userJpaEntity == null ) {
+            return null;
+        }
+
+        List<User> list = new ArrayList<User>( userJpaEntity.size() );
+        for ( UserJpaEntity userJpaEntity1 : userJpaEntity ) {
+            list.add( toDomain( userJpaEntity1 ) );
+        }
+
+        return list;
     }
 
     protected UserJpaEntity userToUserJpaEntity(User user) {
