@@ -14,8 +14,8 @@ import team.themoment.officialgsm.repository.user.UserRepository;
 public class RefuseApprovedUseCase {
     private final UserRepository userRepository;
 
-    public void execute(String useSeq) {
-        User user = userRepository.findByOauthId(useSeq)
+    public void execute(String oauthId) {
+        User user = userRepository.findByOauthId(oauthId)
                 .orElseThrow(() -> new CustomException("유저를 찾을 수 없습니다.", CustomHttpStatus.NOT_FOUND));
         userRepository.delete(user);
     }
