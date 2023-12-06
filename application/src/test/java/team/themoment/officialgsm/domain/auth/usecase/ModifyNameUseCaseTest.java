@@ -20,7 +20,6 @@ class ModifyNameUseCaseTest {
 
     @Test
     void execute() {
-        // give & when & then
         Assertions.assertThat(user.modifyUserName(userNameDto.getUserName()).userName()).isEqualTo(userNameDto.getUserName());
     }
 }
