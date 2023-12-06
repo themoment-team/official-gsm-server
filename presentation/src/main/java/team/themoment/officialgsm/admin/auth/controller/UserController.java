@@ -69,15 +69,15 @@ public class UserController {
         return ResponseEntity.ok(userDataMapper.toUnapprovedListResponse(unapprovedListUseCase.execute()));
     }
 
-    @PatchMapping("/approved/{userSeq}")
-    public ResponseEntity<Void> approved(@PathVariable String userSeq) {
-        approvedUseCase.execute(userSeq);
+    @PatchMapping("/approved/{oauthId}")
+    public ResponseEntity<Void> approved(@PathVariable String oauthId) {
+        approvedUseCase.execute(oauthId);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/approved/{userSeq}")
-    public ResponseEntity<Void> refuseApproved(@PathVariable String userSeq) {
-        refuseApprovedUseCase.execute(userSeq);
+    @DeleteMapping("/approved/{oauthId}")
+    public ResponseEntity<Void> refuseApproved(@PathVariable String oauthId) {
+        refuseApprovedUseCase.execute(oauthId);
         return ResponseEntity.noContent().build();
     }
 
