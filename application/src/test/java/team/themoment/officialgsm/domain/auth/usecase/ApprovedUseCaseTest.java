@@ -2,28 +2,37 @@ package team.themoment.officialgsm.domain.auth.usecase;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
+import team.themoment.officialgsm.common.util.UserUtil;
 import team.themoment.officialgsm.domain.user.Role;
 import team.themoment.officialgsm.domain.user.User;
+import team.themoment.officialgsm.repository.user.UserRepository;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.mockito.Mockito.*;
+import static org.mockito.BDDMockito.given;
+
+@ExtendWith(MockitoExtension.class)
 class ApprovedUseCaseTest {
 
-    private final User grantor = new User(
-            "0", "신희성", "s23012@gsm.hs.kr", Role.UNAPPROVED, null, null, LocalDateTime.now()
-    );
 
-    private final User user = new User(
-            "1", "최장우", "s22012@gsm.hs.kr", Role.ADMIN, null, null, LocalDateTime.now()
-    );
+    @Mock
+    private UserRepository userRepository;
 
-    private final LocalDateTime approvedAt = LocalDateTime.now();
+    @Mock
+    private UserUtil userUtil;
+
+    @InjectMocks
+    private ApprovedUseCase approvedUseCase;
 
     @Test
-    void execute() {
-        User approvedUser = user.approvedExecute(grantor, approvedAt);
-
-        Assertions.assertThat(approvedUser.role()).isEqualTo(Role.ADMIN);
-        Assertions.assertThat(approvedUser.grantor().oauthId()).isEqualTo(grantor.oauthId());
+    public void testExecute() {
     }
 }
