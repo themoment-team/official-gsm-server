@@ -11,7 +11,7 @@ import team.themoment.officialgsm.domain.auth.dto.UserInfoDto;
 import team.themoment.officialgsm.domain.user.Role;
 import team.themoment.officialgsm.domain.user.User;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -25,12 +25,15 @@ class FindUserInfoUseCaseTest {
 
     @Test
     void execute() {
+        // given
         User user = new User("0", "신희성", "s23012@gsm.hs.kr", Role.ADMIN, null, null, null);
 
-        when(userUtil.getCurrentUser()).thenReturn(user);
+        given(userUtil.getCurrentUser()).willReturn(user);
 
+        // when
         UserInfoDto result = findUserInfoUseCase.execute();
 
+        // then
         verify(userUtil, times(1)).getCurrentUser();
 
         assertThat("신희성").isEqualTo(result.getUserName());

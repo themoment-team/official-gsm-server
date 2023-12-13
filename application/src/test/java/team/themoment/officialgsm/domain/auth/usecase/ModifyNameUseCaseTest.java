@@ -1,22 +1,16 @@
 package team.themoment.officialgsm.domain.auth.usecase;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.context.SpringBootTest;
 import team.themoment.officialgsm.common.util.UserUtil;
 import team.themoment.officialgsm.domain.auth.dto.UserNameDto;
 import team.themoment.officialgsm.domain.user.Role;
 import team.themoment.officialgsm.domain.user.User;
 import team.themoment.officialgsm.repository.user.UserRepository;
 
-import java.time.LocalDateTime;
 
 import static org.mockito.Mockito.*;
 import static org.mockito.BDDMockito.given;
