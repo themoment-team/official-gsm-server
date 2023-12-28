@@ -80,9 +80,4 @@ public class UserController {
         refuseApprovedUseCase.execute(oauthId);
         return ResponseEntity.noContent().build();
     }
-
-    @GetMapping ("/test")
-    public ResponseEntity<Void> test() {
-        return ResponseEntity.ok().build();
-    }
 }
