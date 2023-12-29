@@ -14,11 +14,9 @@ import team.themoment.officialgsm.admin.auth.mapper.AuthDataMapper;
 import team.themoment.officialgsm.common.util.ConstantsUtil;
 import team.themoment.officialgsm.common.util.CookieUtil;
 import team.themoment.officialgsm.domain.auth.dto.UserInfoDto;
-import team.themoment.officialgsm.domain.auth.dto.UserNameDto;
 import team.themoment.officialgsm.domain.auth.usecase.*;
 
 import java.util.List;
-
 
 @RestController
 @RequestMapping("/api/auth")

@@ -1,17 +1,16 @@
 package team.themoment.officialgsm.global.security.service;
+
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
-import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
-import static team.themoment.officialgsm.domain.user.Role.*;
-
 import team.themoment.officialgsm.common.util.ConstantsUtil;
 import team.themoment.officialgsm.common.util.CookieUtil;
 import team.themoment.officialgsm.common.util.EmailUtil;
@@ -29,6 +28,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+
+import static team.themoment.officialgsm.domain.user.Role.UNAPPROVED;
 
 @Service
 @RequiredArgsConstructor

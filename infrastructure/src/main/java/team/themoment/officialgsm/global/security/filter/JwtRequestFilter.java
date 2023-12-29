@@ -1,7 +1,5 @@
 package team.themoment.officialgsm.global.security.filter;
 
-
-import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -9,7 +7,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -20,11 +17,8 @@ import team.themoment.officialgsm.common.util.ConstantsUtil;
 import team.themoment.officialgsm.common.util.CookieUtil;
 import team.themoment.officialgsm.common.util.UserUtil;
 import team.themoment.officialgsm.domain.token.BlackList;
-import team.themoment.officialgsm.domain.user.User;
 import team.themoment.officialgsm.global.security.jwt.JwtTokenProvider;
-import team.themoment.officialgsm.persistence.token.entity.BlackListRedisEntity;
 import team.themoment.officialgsm.persistence.token.repository.BlackListRepositoryImpl;
-import team.themoment.officialgsm.repository.token.BlackListRepository;
 import team.themoment.officialgsm.repository.user.UserRepository;
 
 import java.io.IOException;
