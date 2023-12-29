@@ -1,13 +1,11 @@
 package team.themoment.officialgsm.domain.auth.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@Setter
 public class UserNameDto {
     private String userName;
 }

@@ -16,6 +16,8 @@ import java.util.List;
         unmappedTargetPolicy = ReportingPolicy.WARN
 )
 public interface AuthDataMapper {
+
+    @Mapping(target = "userName", source = "userNameModifyRequest.userName")
     UserNameDto toDto(UserNameModifyRequest userNameModifyRequest);
     UserInfoResponse toInfoResponse(UserInfoDto userInfoDto);
     List<UnapprovedListResponse> toUnapprovedListResponse(List<UnapprovedListDto> unapprovedListDto);
