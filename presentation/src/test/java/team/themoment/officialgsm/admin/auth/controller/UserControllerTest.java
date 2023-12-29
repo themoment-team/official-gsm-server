@@ -1,27 +1,17 @@
 package team.themoment.officialgsm.admin.auth.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 import team.themoment.officialgsm.admin.auth.dto.request.UserNameModifyRequest;
 import team.themoment.officialgsm.admin.auth.dto.response.UnapprovedListResponse;
 import team.themoment.officialgsm.admin.auth.dto.response.UserInfoResponse;
@@ -32,12 +22,10 @@ import team.themoment.officialgsm.domain.auth.dto.UnapprovedListDto;
 import team.themoment.officialgsm.domain.auth.dto.UserInfoDto;
 import team.themoment.officialgsm.domain.auth.usecase.*;
 import team.themoment.officialgsm.domain.user.Role;
-import team.themoment.officialgsm.domain.user.User;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.mockito.BDDMockito.given;
@@ -90,11 +78,16 @@ public class UserControllerTest {
         // given
         UserNameModifyRequest request = new UserNameModifyRequest("신희성");
 
-        // when & then
-        mockMvc.perform(patch("/api/auth/username")
+        // when
+        ResultActions resultActions = mockMvc.perform(patch("/api/auth/username")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(new ObjectMapper().writeValueAsString(request)))
-                .andExpect(status().isOk());
+                        .content(new ObjectMapper().writeValueAsString(request)));
+
+
+        // then
+        resultActions.andExpect(status().isOk());
+
+        verify(modifyNameUseCase, times(1)).execute(userDataMapper.toDto(request));
     }
 
     @Test
@@ -147,8 +140,7 @@ public class UserControllerTest {
         ResultActions resultActions = mockMvc.perform(get("/api/auth/token/refresh"));
 
         // then
-        resultActions
-                .andExpect(status().isOk());
+        resultActions.andExpect(status().isOk());
 
         verify(tokenReissueUseCase, times(1)).execute(eq(token), any());
     }
