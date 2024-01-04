@@ -12,12 +12,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 public class UserJpaEntity {
-
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_seq")
-    private Long userSeq;
-
     @Column(name = "oauth_id", nullable = false)
     private String oauthId;
 
@@ -32,7 +27,7 @@ public class UserJpaEntity {
     private Role role;
 
     @OneToOne
-    @JoinColumn(name = "grantor_seq", referencedColumnName = "user_seq", nullable = true)
+    @JoinColumn(name = "grantor_seq", referencedColumnName = "oauth_id", nullable = true)
     private UserJpaEntity grantor;
 
     @Column(name = "approved_at", nullable = true)

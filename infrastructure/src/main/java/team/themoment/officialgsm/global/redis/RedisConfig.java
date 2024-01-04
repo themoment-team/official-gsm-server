@@ -17,10 +17,14 @@ import org.springframework.session.data.redis.config.annotation.web.http.EnableR
 @EnableRedisHttpSession(maxInactiveIntervalInSeconds = 300)
 @EnableRedisRepositories
 public class RedisConfig {
-    @Value("${spring.data.redis.host}")
-    private String host;
-    @Value("${spring.data.redis.port}")
-    private Integer port;
+    private final String host;
+    private final Integer port;
+
+    public RedisConfig(@Value("${spring.data.redis.host}") String host,
+                       @Value("${spring.data.redis.port}") Integer port) {
+        this.host = host;
+        this.port = port;
+    }
 
     @Bean
     @ConditionalOnMissingBean(RedisConnectionFactory.class)

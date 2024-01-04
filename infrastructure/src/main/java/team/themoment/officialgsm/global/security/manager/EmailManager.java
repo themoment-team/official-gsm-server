@@ -1,14 +1,16 @@
-package team.themoment.officialgsm.global.security.util;
+package team.themoment.officialgsm.global.security.manager;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import team.themoment.officialgsm.common.util.EmailUtil;
 
 @Component
-public class EmailUtilImpl implements EmailUtil {
+public class EmailManager {
 
-    @Value("${emailId-regex}")
-    private String emailIdRegex;
+    private final String emailIdRegex;
+
+    public EmailManager(@Value("${emailId-regex}") String emailIdRegex) {
+        this.emailIdRegex = emailIdRegex;
+    }
 
     public String getOauthEmailDomain(String email) {
         int index = email.indexOf("@");
@@ -16,7 +18,7 @@ public class EmailUtilImpl implements EmailUtil {
         String emailId = email.substring(0, index);
 
         if (emailId.matches(emailIdRegex)){
-//            throw new IllegalArgumentException("학생은 로그인할 수 없습니다.");
+            throw new IllegalArgumentException("학생은 로그인할 수 없습니다.");
         }
 
         return email.substring(index + 1);

@@ -20,8 +20,8 @@ public class AuthDetailsService implements UserDetailsService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public UserDetails loadUserByUsername(String oauthId) throws UsernameNotFoundException {
-        return userJpaRepository.findByOauthId(oauthId)
+        return userJpaRepository.findById(oauthId)
                 .map(AuthDetails::new)
-                .orElseThrow(() -> new CustomException("사용자를 찾을 수 없습니다.", CustomHttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new CustomException("User not found.", CustomHttpStatus.NOT_FOUND));
     }
 }

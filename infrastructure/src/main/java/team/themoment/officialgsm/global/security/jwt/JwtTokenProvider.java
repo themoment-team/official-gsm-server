@@ -1,6 +1,5 @@
 package team.themoment.officialgsm.global.security.jwt;
 
-
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import lombok.AllArgsConstructor;
@@ -8,12 +7,12 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import team.themoment.officialgsm.common.exception.CustomException;
 import team.themoment.officialgsm.common.exception.CustomHttpStatus;
+import team.themoment.officialgsm.domain.auth.spi.TokenProvider;
 import team.themoment.officialgsm.global.security.auth.AuthDetailsService;
 
 import java.nio.charset.StandardCharsets;
@@ -24,14 +23,16 @@ import java.util.Date;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class JwtTokenProvider {
+public class JwtTokenProvider implements TokenProvider {
     @Value("${jwt.accessSecret}")
     private String accessSecret;
     @Value("${jwt.refreshSecret}")
     private String refreshSecret;
     private final AuthDetailsService authDetailsService;
+    @Getter
     private final long ACCESS_TOKEN_EXPIRE_TIME = 60 * 60 * 2 * 1000L;
-    private final long REFRESH_TOKEN_EXPIRE_TIME = ACCESS_TOKEN_EXPIRE_TIME * 12 * 21;
+    @Getter
+    private final long REFRESH_TOKEN_EXPIRE_TIME = ACCESS_TOKEN_EXPIRE_TIME * 12;
 
     @AllArgsConstructor
     public enum TokenType{
@@ -66,15 +67,18 @@ public class JwtTokenProvider {
 
     private Claims getTokenBody(String token, String secret){
         try {
+            if (token == null || token.isEmpty())
+                throw new JwtException("Invalid Token");
+
             return Jwts.parserBuilder()
                     .setSigningKey(getSignInKey(secret))
                     .build()
                     .parseClaimsJws(token)
                     .getBody();
-        } catch (ExpiredJwtException e){
-            throw new CustomException("토큰이 만료되었습니다.", CustomHttpStatus.UNAUTHORIZED);
-        } catch (JwtException e){
-            throw new CustomException("검증되지 않은 토큰입니다.", CustomHttpStatus.UNAUTHORIZED);
+        } catch (ExpiredJwtException e) {
+            throw new CustomException("Expired Token", CustomHttpStatus.UNAUTHORIZED);
+        } catch (JwtException e) {
+            throw new CustomException("Invalid Token", CustomHttpStatus.UNAUTHORIZED);
         }
     }
 
@@ -85,10 +89,10 @@ public class JwtTokenProvider {
                     .build()
                     .parseClaimsJws(token)
                     .getBody();
-        } catch (ExpiredJwtException e){
-            throw new CustomException("리프레시 토큰이 만료되었습니다.", CustomHttpStatus.UNAUTHORIZED);
-        } catch (JwtException e){
-            throw new CustomException("검증되지 않은 리프레시 토큰입니다.", CustomHttpStatus.UNAUTHORIZED);
+        } catch (ExpiredJwtException e) {
+            throw new CustomException("Expired RefreshToken", CustomHttpStatus.UNAUTHORIZED);
+        } catch (JwtException e) {
+            throw new CustomException("Invalid RefreshToken", CustomHttpStatus.UNAUTHORIZED);
         }
     }
 
@@ -118,4 +122,8 @@ public class JwtTokenProvider {
         return isExpiredToken(token, secret);
     }
 
+    @Override
+    public String getRefreshSecert() {
+        return refreshSecret;
+    }
 }
