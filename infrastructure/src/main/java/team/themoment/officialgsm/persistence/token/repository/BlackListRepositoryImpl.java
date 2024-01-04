@@ -16,13 +16,13 @@ public class BlackListRepositoryImpl implements BlackListRepository {
     private final BlackListMapper blackListMapper;
 
     @Override
-    public void save(BlackList blackList) {
-        blackListJpaRepository.save(blackListMapper.toEntity(blackList));
+    public BlackList save(BlackList blackList) {
+        return blackListMapper.toDomain(blackListJpaRepository.save(blackListMapper.toEntity(blackList)));
     }
 
     @Override
     public Optional<BlackList> findByAccessToken(String accessToken) {
         Optional<BlackListRedisEntity> blackList = blackListJpaRepository.findByAccessToken(accessToken);
-        return Optional.ofNullable(blackListMapper.toDomain(blackList));
+        return blackList.map(blackListMapper::toDomain);
     }
 }
