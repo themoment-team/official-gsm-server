@@ -7,7 +7,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import team.themoment.officialgsm.common.exception.CustomException;
-import team.themoment.officialgsm.common.util.ConstantsUtil;
+import team.themoment.officialgsm.domain.auth.dto.ReissueTokenDto;
 import team.themoment.officialgsm.domain.auth.spi.TokenProvider;
 import team.themoment.officialgsm.domain.token.RefreshToken;
 import team.themoment.officialgsm.domain.user.Role;
@@ -17,11 +17,11 @@ import team.themoment.officialgsm.repository.user.UserRepository;
 
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.never;
 
 @ExtendWith(MockitoExtension.class)
 class TokenReissueUseCaseTest {
@@ -37,9 +37,6 @@ class TokenReissueUseCaseTest {
 
     @Mock
     private TokenProvider tokenProvider;
-
-    @Mock
-    private CookieUtil cookieUtil;
 
     @Mock
     private HttpServletResponse response;
@@ -63,17 +60,14 @@ class TokenReissueUseCaseTest {
         given(tokenProvider.generatedAccessToken(oauthId)).willReturn("1");
         given(tokenProvider.generatedRefreshToken(oauthId)).willReturn("1");
 
-        given(tokenProvider.getACCESS_TOKEN_EXPIRE_TIME()).willReturn(0L);
-        given(tokenProvider.getREFRESH_TOKEN_EXPIRE_TIME()).willReturn(0L);
-
         // when
-        tokenReissueUseCase.execute(refreshTokenValue, response);
+        ReissueTokenDto reissueTokenDto = tokenReissueUseCase.execute(refreshTokenValue, response);
 
         // then
         verify(refreshTokenRepository, times(1)).save(refreshToken.updateRefreshToken("1"));
 
-        verify(cookieUtil, times(1)).addTokenCookie(response, "access_token", "1", 0L, true);
-        verify(cookieUtil, times(1)).addTokenCookie(response, "refresh_token", "1", 0L, true);
+        assertThat(reissueTokenDto.getAccessToken()).isEqualTo("1");
+        assertThat(reissueTokenDto.getRefreshToken()).isEqualTo("1");
     }
 
     @Test
@@ -83,15 +77,6 @@ class TokenReissueUseCaseTest {
 
         // then
         verify(userRepository, never()).findByOauthId(any());
-
-        verify(cookieUtil, never()).addTokenCookie(
-                any(HttpServletResponse.class),
-                eq(ConstantsUtil.accessToken),
-                any(String.class),
-                any(Long.class),
-                any(Boolean.class)
-        );
-
         verify(refreshTokenRepository, never()).save(any());
     }
 
@@ -112,14 +97,6 @@ class TokenReissueUseCaseTest {
 
         // then
         verify(refreshTokenRepository, never()).findByOauthId(any());
-
-        verify(cookieUtil, never()).addTokenCookie(
-                any(HttpServletResponse.class),
-                eq(ConstantsUtil.accessToken),
-                any(String.class),
-                any(Long.class),
-                any(Boolean.class)
-        );
 
         verify(refreshTokenRepository, never()).save(any());
     }
@@ -144,14 +121,6 @@ class TokenReissueUseCaseTest {
         assertThrows(CustomException.class, () -> tokenReissueUseCase.execute(refreshTokenValue, response));
 
         // then
-        verify(cookieUtil, never()).addTokenCookie(
-                any(HttpServletResponse.class),
-                eq(ConstantsUtil.accessToken),
-                any(String.class),
-                any(Long.class),
-                any(Boolean.class)
-        );
-
         verify(refreshTokenRepository, never()).save(any());
     }
 }
