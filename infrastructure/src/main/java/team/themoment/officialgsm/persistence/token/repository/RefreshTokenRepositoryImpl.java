@@ -18,8 +18,8 @@ public class RefreshTokenRepositoryImpl implements RefreshTokenRepository {
     private final RefreshTokenMapper refreshTokenMapper;
 
     @Override
-    public void save(RefreshToken refreshToken) {
-        refreshTokenJpaRepository.save(refreshTokenMapper.toEntity(refreshToken));
+    public RefreshToken save(RefreshToken refreshToken) {
+        return refreshTokenMapper.toDomain(refreshTokenJpaRepository.save(refreshTokenMapper.toEntity(refreshToken)));
     }
 
     @Override
