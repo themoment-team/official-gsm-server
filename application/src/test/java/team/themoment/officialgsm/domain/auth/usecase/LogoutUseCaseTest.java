@@ -8,7 +8,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import team.themoment.officialgsm.common.exception.CustomException;
-import team.themoment.officialgsm.common.util.UserUtil;
 import team.themoment.officialgsm.domain.token.BlackList;
 import team.themoment.officialgsm.domain.token.RefreshToken;
 import team.themoment.officialgsm.domain.user.Role;
@@ -37,9 +36,6 @@ class LogoutUseCaseTest {
     @Mock
     private RedisTemplate redisTemplate;
 
-    @Mock
-    private UserUtil userUtil;
-
     @Test
     void execute() {
         // given
@@ -50,13 +46,12 @@ class LogoutUseCaseTest {
         User user = new User(oauthId, "신희성", "s23012@gsm.hs.kr", Role.UNAPPROVED, null, null, null);
         RefreshToken refreshToken = new RefreshToken(oauthId, refreshTokenValue, 7200L);
 
-        given(userUtil.getCurrentUser()).willReturn(user);
         given(refreshTokenRepository.findByOauthId(oauthId)).willReturn(Optional.of(refreshToken));
 
         given(redisTemplate.opsForValue()).willReturn(mock(ValueOperations.class));
 
         // when
-        logoutUseCase.execute(accessTokenValue);
+        logoutUseCase.execute(accessTokenValue, user);
 
         // then
         verify(refreshTokenRepository, times(1)).delete(refreshToken);
@@ -71,11 +66,10 @@ class LogoutUseCaseTest {
 
         User user = new User(oauthId, "신희성", "s23012@gsm.hs.kr", Role.UNAPPROVED, null, null, null);
 
-        given(userUtil.getCurrentUser()).willReturn(user);
         given(refreshTokenRepository.findByOauthId(oauthId)).willReturn(Optional.empty());
 
         // when
-        assertThrows(CustomException.class, () -> logoutUseCase.execute(accessTokenValue));
+        assertThrows(CustomException.class, () -> logoutUseCase.execute(accessTokenValue, user));
 
         // then
         verify(refreshTokenRepository, never()).delete(any());
@@ -92,7 +86,6 @@ class LogoutUseCaseTest {
         User user = new User(oauthId, "신희성", "s23012@gsm.hs.kr", Role.UNAPPROVED, null, null, null);
         RefreshToken refreshToken = new RefreshToken(oauthId, refreshTokenValue, 7200L);
 
-        given(userUtil.getCurrentUser()).willReturn(user);
         given(refreshTokenRepository.findByOauthId(oauthId)).willReturn(Optional.of(refreshToken));
 
         ValueOperations<String, String> valueOperationsMock = mock(ValueOperations.class);
@@ -100,7 +93,7 @@ class LogoutUseCaseTest {
         given(valueOperationsMock.get(accessTokenValue)).willReturn("0");
 
         // when
-        assertThrows(CustomException.class, () -> logoutUseCase.execute(accessTokenValue));
+        assertThrows(CustomException.class, () -> logoutUseCase.execute(accessTokenValue, user));
 
         // then
         verify(refreshTokenRepository, never()).save(any());

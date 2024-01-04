@@ -8,7 +8,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import team.themoment.officialgsm.common.exception.CustomException;
-import team.themoment.officialgsm.common.util.UserUtil;
 import team.themoment.officialgsm.domain.user.Role;
 import team.themoment.officialgsm.domain.user.User;
 import team.themoment.officialgsm.repository.user.UserRepository;
@@ -31,9 +30,6 @@ class ApprovedUseCaseTest {
     @Mock
     private UserRepository userRepository;
 
-    @Mock
-    private UserUtil userUtil;
-
     @Captor
     private ArgumentCaptor<User> userCaptor;
 
@@ -44,11 +40,10 @@ class ApprovedUseCaseTest {
         User user = new User(oauthId, "신희성", "s23012@gsm.hs.kr", Role.UNAPPROVED, null, null, null);
         User grantor = new User("1", "최장우", "s22000@gsm.hs.kr", Role.ADMIN, null, null, null);
 
-        given(userUtil.getCurrentUser()).willReturn(grantor);
         given(userRepository.findByOauthId(oauthId)).willReturn(Optional.of(user));
 
         // when
-        approvedUseCase.execute(oauthId);
+        approvedUseCase.execute(oauthId, grantor);
 
         // then
         verify(userRepository, times(1)).save(userCaptor.capture());
@@ -67,11 +62,10 @@ class ApprovedUseCaseTest {
         String oauthId = "0";
         User grantor = new User("1", "최장우", "s22000@gsm.hs.kr", Role.ADMIN, null, null, null);
 
-        given(userUtil.getCurrentUser()).willReturn(grantor);
         given(userRepository.findByOauthId(oauthId)).willReturn(Optional.empty());
 
         // when
-        assertThrows(CustomException.class, () -> approvedUseCase.execute(oauthId));
+        assertThrows(CustomException.class, () -> approvedUseCase.execute(oauthId, grantor));
 
         // then
         verify(userRepository, times(1)).findByOauthId(oauthId);

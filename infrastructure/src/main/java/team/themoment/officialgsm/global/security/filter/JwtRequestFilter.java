@@ -15,7 +15,6 @@ import team.themoment.officialgsm.common.exception.CustomException;
 import team.themoment.officialgsm.common.exception.CustomHttpStatus;
 import team.themoment.officialgsm.common.util.ConstantsUtil;
 import team.themoment.officialgsm.common.util.CookieUtil;
-import team.themoment.officialgsm.common.util.UserUtil;
 import team.themoment.officialgsm.domain.token.BlackList;
 import team.themoment.officialgsm.global.security.jwt.JwtTokenProvider;
 import team.themoment.officialgsm.persistence.token.repository.BlackListRepositoryImpl;
@@ -32,7 +31,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     private final UserRepository userRepository;
     private final JwtTokenProvider jwtProvider;
     private final CookieUtil cookieUtil;
-    private final UserUtil userUtil;
 
     @Value("${jwt.accessSecret}")
     private String accessSecret;

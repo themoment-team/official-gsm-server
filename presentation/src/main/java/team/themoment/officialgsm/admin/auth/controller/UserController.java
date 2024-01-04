@@ -10,11 +10,13 @@ import org.springframework.web.bind.annotation.*;
 import team.themoment.officialgsm.admin.auth.dto.request.UserNameModifyRequest;
 import team.themoment.officialgsm.admin.auth.dto.response.UnapprovedListResponse;
 import team.themoment.officialgsm.admin.auth.dto.response.UserInfoResponse;
+import team.themoment.officialgsm.admin.auth.manager.UserManager;
 import team.themoment.officialgsm.admin.auth.mapper.AuthDataMapper;
 import team.themoment.officialgsm.common.util.ConstantsUtil;
 import team.themoment.officialgsm.common.util.CookieUtil;
 import team.themoment.officialgsm.domain.auth.dto.UserInfoDto;
 import team.themoment.officialgsm.domain.auth.usecase.*;
+import team.themoment.officialgsm.domain.user.User;
 
 import java.util.List;
 
@@ -31,25 +33,29 @@ public class UserController {
     private final UnapprovedListUseCase unapprovedListUseCase;
     private final ApprovedUseCase approvedUseCase;
     private final RefuseApprovedUseCase refuseApprovedUseCase;
+    private final UserManager userManager;
 
     @PatchMapping("/username")
     public ResponseEntity<Void> nameModify(
             @Valid @RequestBody UserNameModifyRequest request
     ) {
-        modifyNameUseCase.execute(userDataMapper.toDto(request));
+        User user = userManager.getCurrentUser();
+        modifyNameUseCase.execute(userDataMapper.toDto(request), user);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/userinfo")
     public ResponseEntity<UserInfoResponse> userInfoFind() {
-        UserInfoDto userInfoDto = findUserInfoUseCase.execute();
+        User user = userManager.getCurrentUser();
+        UserInfoDto userInfoDto = findUserInfoUseCase.execute(user);
         return ResponseEntity.ok(userDataMapper.toInfoResponse(userInfoDto));
     }
 
     @DeleteMapping("/logout")
     public ResponseEntity<Void> logout(HttpServletRequest request) {
         String accessToken = cookieUtil.getCookieValue(request, ConstantsUtil.accessToken);
-        logoutUseCase.execute(accessToken);
+        User user = userManager.getCurrentUser();
+        logoutUseCase.execute(accessToken, user);
         return ResponseEntity.noContent().build();
     }
 
@@ -70,7 +76,8 @@ public class UserController {
 
     @PatchMapping("/approved/{oauthId}")
     public ResponseEntity<Void> approved(@PathVariable String oauthId) {
-        approvedUseCase.execute(oauthId);
+        User grantor = userManager.getCurrentUser();
+        approvedUseCase.execute(oauthId, grantor);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 

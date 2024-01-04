@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import team.themoment.officialgsm.common.annotation.UseCaseWithTransaction;
 import team.themoment.officialgsm.common.exception.CustomException;
 import team.themoment.officialgsm.common.exception.CustomHttpStatus;
-import team.themoment.officialgsm.common.util.UserUtil;
 import team.themoment.officialgsm.domain.token.BlackList;
 import team.themoment.officialgsm.domain.token.RefreshToken;
 import team.themoment.officialgsm.domain.user.User;
@@ -20,10 +19,8 @@ public class LogoutUseCase {
     private final BlackListRepository blackListRepository;
     private final RefreshTokenRepository refreshTokenRepository;
     private final RedisTemplate redisTemplate;
-    private final UserUtil userUtil;
 
-    public void execute(String accessToken) {
-        User user = userUtil.getCurrentUser();
+    public void execute(String accessToken, User user) {
         RefreshToken refreshToken = refreshTokenRepository.findByOauthId(user.oauthId())
                 .orElseThrow(() -> new CustomException("리프레시 토큰을 찾을 수 없습니다.", CustomHttpStatus.NOT_FOUND));
         refreshTokenRepository.delete(refreshToken);

@@ -5,21 +5,16 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import team.themoment.officialgsm.common.util.UserUtil;
 import team.themoment.officialgsm.domain.auth.dto.UserNameDto;
 import team.themoment.officialgsm.domain.user.Role;
 import team.themoment.officialgsm.domain.user.User;
 import team.themoment.officialgsm.repository.user.UserRepository;
 
-
-import static org.mockito.Mockito.*;
-import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class ModifyNameUseCaseTest {
-
-    @Mock
-    private UserUtil userUtil;
 
     @Mock
     private UserRepository userRepository;
@@ -34,10 +29,8 @@ class ModifyNameUseCaseTest {
         User currentUser = new User("0", null, "s23012@gsm.hs.kr", Role.UNAPPROVED, null, null, null);
         User modifiedUser = new User("0", "신희성", "s23012@gsm.hs.kr", Role.UNAPPROVED, null, null, null);
 
-        given(userUtil.getCurrentUser()).willReturn(currentUser);
-
         // when
-        modifyNameUseCase.execute(dto);
+        modifyNameUseCase.execute(dto, currentUser);
 
         // then
         verify(userRepository, times(1)).save(modifiedUser);

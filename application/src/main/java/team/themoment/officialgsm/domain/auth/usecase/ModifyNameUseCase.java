@@ -3,7 +3,6 @@ package team.themoment.officialgsm.domain.auth.usecase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import team.themoment.officialgsm.common.annotation.UseCaseWithTransaction;
-import team.themoment.officialgsm.common.util.UserUtil;
 import team.themoment.officialgsm.domain.auth.dto.UserNameDto;
 import team.themoment.officialgsm.domain.user.User;
 import team.themoment.officialgsm.repository.user.UserRepository;
@@ -12,11 +11,9 @@ import team.themoment.officialgsm.repository.user.UserRepository;
 @UseCaseWithTransaction
 @RequiredArgsConstructor
 public class ModifyNameUseCase {
-    private final UserUtil userUtil;
     private final UserRepository userRepository;
 
-    public void execute(UserNameDto dto) {
-        User user = userUtil.getCurrentUser();
+    public void execute(UserNameDto dto, User user) {
         User modifiedUser = user.modifyUserName(dto.getUserName());
         userRepository.save(modifiedUser);
     }
