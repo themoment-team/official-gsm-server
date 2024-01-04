@@ -1,11 +1,11 @@
 package team.themoment.officialgsm.persistence.token.mapper;
 
-import org.mapstruct.*;
+import org.mapstruct.InjectionStrategy;
+import org.mapstruct.Mapper;
+import org.mapstruct.MappingConstants;
+import org.mapstruct.ReportingPolicy;
 import team.themoment.officialgsm.domain.token.RefreshToken;
 import team.themoment.officialgsm.persistence.token.entity.RefreshTokenRedisEntity;
-
-import javax.swing.text.html.Option;
-import java.util.Optional;
 
 @Mapper(
         componentModel = MappingConstants.ComponentModel.SPRING,
@@ -14,5 +14,5 @@ import java.util.Optional;
 )
 public interface RefreshTokenMapper {
     RefreshTokenRedisEntity toEntity(RefreshToken refreshToken);
-    RefreshToken toDomain(Optional<RefreshTokenRedisEntity> refreshTokenRedisEntity);
+    RefreshToken toDomain(RefreshTokenRedisEntity refreshTokenRedisEntity);
 }

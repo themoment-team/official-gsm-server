@@ -3,7 +3,6 @@ package team.themoment.officialgsm.domain.auth.usecase;
 
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import team.themoment.officialgsm.common.annotation.UseCaseWithTransaction;
 import team.themoment.officialgsm.common.exception.CustomException;
@@ -33,13 +32,13 @@ public class TokenReissueUseCase {
         String oauthId = tokenProvider.getRefreshTokenOauthId(token, secret);
         User user = userRepository.findByOauthId(oauthId)
                 .orElseThrow(() -> new CustomException("유저를 찾을 수 없습니다.", CustomHttpStatus.BADREQUEST));
-        RefreshToken refreshToken = refreshTokenRepository.findByOauthId(oauthId)
+        RefreshToken refreshToken = refreshTokenRepository.findByOauthId(user.oauthId())
                 .orElseThrow(() -> new CustomException("리프레시 토큰이 유효하지 않습니다.", CustomHttpStatus.BADREQUEST));
 
         String newAccessToken = tokenProvider.generatedAccessToken(oauthId);
         String newRefreshToken = tokenProvider.generatedRefreshToken(oauthId);
 
-        if (user.oauthId().equals(refreshToken.oauthId()) || !refreshToken.refreshToken().equals(token) && !tokenProvider.isValidToken(token, secret)) {
+        if (!user.oauthId().equals(refreshToken.oauthId()) || !refreshToken.refreshToken().equals(token) && !tokenProvider.isValidToken(token, secret)) {
             throw new CustomException("리프레시 토큰이 유효하지 않습니다.", CustomHttpStatus.BADREQUEST);
         }
 

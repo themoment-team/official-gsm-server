@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import team.themoment.officialgsm.domain.token.BlackList;
 import team.themoment.officialgsm.persistence.token.entity.BlackListRedisEntity;
+import team.themoment.officialgsm.persistence.token.mapper.BlackListMapper;
 import team.themoment.officialgsm.repository.token.BlackListRepository;
 
 import java.util.Optional;
@@ -12,23 +13,16 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class BlackListRepositoryImpl implements BlackListRepository {
     private final BlackListJpaRepository blackListJpaRepository;
+    private final BlackListMapper blackListMapper;
 
     @Override
-    public void save(BlackList blackList) {
-        blackListJpaRepository.save(BlackListRedisEntity.builder()
-                        .accessToken(blackList.accessToken())
-                        .oauthId(blackList.oauthId())
-                        .timeToLive(blackList.timeToLive())
-                .build());
+    public BlackList save(BlackList blackList) {
+        return blackListMapper.toDomain(blackListJpaRepository.save(blackListMapper.toEntity(blackList)));
     }
 
     @Override
     public Optional<BlackList> findByAccessToken(String accessToken) {
         Optional<BlackListRedisEntity> blackList = blackListJpaRepository.findByAccessToken(accessToken);
-
-        return blackList.isPresent() ? Optional.of(new BlackList(
-                blackList.get().getOauthId(),
-                blackList.get().getAccessToken(),
-                blackList.get().getTimeToLive())) : Optional.empty();
+        return blackList.map(blackListMapper::toDomain);
     }
 }
