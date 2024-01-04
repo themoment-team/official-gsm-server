@@ -11,10 +11,10 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import team.themoment.officialgsm.admin.auth.manager.CookieManager;
 import team.themoment.officialgsm.common.exception.CustomException;
 import team.themoment.officialgsm.common.exception.CustomHttpStatus;
 import team.themoment.officialgsm.common.util.ConstantsUtil;
-import team.themoment.officialgsm.common.util.CookieUtil;
 import team.themoment.officialgsm.domain.token.BlackList;
 import team.themoment.officialgsm.global.security.jwt.JwtTokenProvider;
 import team.themoment.officialgsm.persistence.token.repository.BlackListRepositoryImpl;
@@ -30,7 +30,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     private final BlackListRepositoryImpl blackListRepository;
     private final UserRepository userRepository;
     private final JwtTokenProvider jwtProvider;
-    private final CookieUtil cookieUtil;
+    private final CookieManager cookieManager;
 
     @Value("${jwt.accessSecret}")
     private String accessSecret;
@@ -43,7 +43,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException, CustomException {
-        String token = cookieUtil.getCookieValue(request, ConstantsUtil.accessToken);
+        String token = cookieManager.getCookieValue(request, ConstantsUtil.accessToken);
 
         if (token != null) {
             Optional<BlackList> blackList = blackListRepository.findByAccessToken(token);

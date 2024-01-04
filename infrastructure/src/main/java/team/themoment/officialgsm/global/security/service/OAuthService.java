@@ -11,8 +11,8 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
+import team.themoment.officialgsm.admin.auth.manager.CookieManager;
 import team.themoment.officialgsm.common.util.ConstantsUtil;
-import team.themoment.officialgsm.common.util.CookieUtil;
 import team.themoment.officialgsm.domain.token.RefreshToken;
 import team.themoment.officialgsm.domain.user.Role;
 import team.themoment.officialgsm.domain.user.User;
@@ -41,7 +41,7 @@ public class OAuthService implements OAuth2UserService<OAuth2UserRequest, OAuth2
     private final RefreshTokenRepository refreshTokenRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final EmailManager emailManager;
-    private final CookieUtil cookieUtil;
+    private final CookieManager cookieManager;
     private final UserMapper userMapper;
 
     @Value("${domain}")
@@ -107,8 +107,8 @@ public class OAuthService implements OAuth2UserService<OAuth2UserRequest, OAuth2
     private void cookieLogic(UserJpaEntity user){
         String accessToken = jwtTokenProvider.generatedAccessToken(user.getOauthId());
         String refreshToken = jwtTokenProvider.generatedRefreshToken(user.getOauthId());
-        cookieUtil.addTokenCookie(httpServletResponse, ConstantsUtil.accessToken, accessToken, jwtTokenProvider.getACCESS_TOKEN_EXPIRE_TIME(), true);
-        cookieUtil.addTokenCookie(httpServletResponse, ConstantsUtil.refreshToken, refreshToken, jwtTokenProvider.getREFRESH_TOKEN_EXPIRE_TIME(), true);
+        cookieManager.addTokenCookie(httpServletResponse, ConstantsUtil.accessToken, accessToken, jwtTokenProvider.getACCESS_TOKEN_EXPIRE_TIME(), true);
+        cookieManager.addTokenCookie(httpServletResponse, ConstantsUtil.refreshToken, refreshToken, jwtTokenProvider.getREFRESH_TOKEN_EXPIRE_TIME(), true);
         RefreshToken entityToRedis = new RefreshToken(user.getOauthId(), refreshToken, jwtTokenProvider.getREFRESH_TOKEN_EXPIRE_TIME());
         refreshTokenRepository.save(entityToRedis);
     }

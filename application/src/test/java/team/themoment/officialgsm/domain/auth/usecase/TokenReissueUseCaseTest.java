@@ -8,7 +8,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import team.themoment.officialgsm.common.exception.CustomException;
 import team.themoment.officialgsm.common.util.ConstantsUtil;
-import team.themoment.officialgsm.common.util.CookieUtil;
 import team.themoment.officialgsm.domain.auth.spi.TokenProvider;
 import team.themoment.officialgsm.domain.token.RefreshToken;
 import team.themoment.officialgsm.domain.user.Role;

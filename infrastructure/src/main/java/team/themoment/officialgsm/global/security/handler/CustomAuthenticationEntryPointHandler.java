@@ -8,8 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
+import team.themoment.officialgsm.admin.auth.manager.CookieManager;
 import team.themoment.officialgsm.common.util.ConstantsUtil;
-import team.themoment.officialgsm.common.util.CookieUtil;
 
 import java.io.IOException;
 
@@ -17,11 +17,11 @@ import java.io.IOException;
 @Component
 @RequiredArgsConstructor
 public class CustomAuthenticationEntryPointHandler implements AuthenticationEntryPoint {
-    private final CookieUtil cookieUtil;
+    private final CookieManager cookieManager;
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
-        String token = cookieUtil.getCookieValue(request, ConstantsUtil.accessToken);
+        String token = cookieManager.getCookieValue(request, ConstantsUtil.accessToken);
 
         log.error("AUTHENTICATION_ENTRY_POINT");
         log.info(token);

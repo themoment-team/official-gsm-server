@@ -15,22 +15,26 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import team.themoment.officialgsm.admin.auth.dto.request.UserNameModifyRequest;
 import team.themoment.officialgsm.admin.auth.dto.response.UnapprovedListResponse;
 import team.themoment.officialgsm.admin.auth.dto.response.UserInfoResponse;
+import team.themoment.officialgsm.admin.auth.manager.CookieManager;
+import team.themoment.officialgsm.admin.auth.manager.UserManager;
 import team.themoment.officialgsm.admin.auth.mapper.AuthDataMapper;
 import team.themoment.officialgsm.common.util.ConstantsUtil;
-import team.themoment.officialgsm.common.util.CookieUtil;
+import team.themoment.officialgsm.domain.auth.dto.ReissueTokenDto;
 import team.themoment.officialgsm.domain.auth.dto.UnapprovedListDto;
 import team.themoment.officialgsm.domain.auth.dto.UserInfoDto;
+import team.themoment.officialgsm.domain.auth.spi.TokenProvider;
 import team.themoment.officialgsm.domain.auth.usecase.*;
 import team.themoment.officialgsm.domain.user.Role;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.ArgumentMatchers.any;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
 public class UserControllerTest {
@@ -60,7 +64,13 @@ public class UserControllerTest {
     RefuseApprovedUseCase refuseApprovedUseCase;
 
     @Mock
-    CookieUtil cookieUtil;
+    CookieManager cookieManager;
+
+    @Mock
+    TokenProvider tokenProvider;
+
+    @Mock
+    UserManager userManager;
 
     @Mock
     AuthDataMapper userDataMapper;
@@ -87,7 +97,7 @@ public class UserControllerTest {
         // then
         resultActions.andExpect(status().isOk());
 
-        verify(modifyNameUseCase, times(1)).execute(userDataMapper.toDto(request));
+        verify(modifyNameUseCase, times(1)).execute(eq(userDataMapper.toDto(request)), any());
     }
 
     @Test
@@ -96,7 +106,7 @@ public class UserControllerTest {
         UserInfoDto mockUserInfoDto = new UserInfoDto("신희성", Role.ADMIN, "s23012@gsm.hs.kr");
         UserInfoResponse mockUserInfoResponse = new UserInfoResponse("신희성", Role.ADMIN, "s23012@gsm.hs.kr");
 
-        given(findUserInfoUseCase.execute()).willReturn(mockUserInfoDto);
+        given(findUserInfoUseCase.execute(any())).willReturn(mockUserInfoDto);
         given(userDataMapper.toInfoResponse(any(UserInfoDto.class))).willReturn(mockUserInfoResponse);
 
         // when
@@ -109,7 +119,7 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.role").value("ADMIN"))
                 .andExpect(jsonPath("$.userEmail").value("s23012@gsm.hs.kr"));
 
-        verify(findUserInfoUseCase, times(1)).execute();
+        verify(findUserInfoUseCase, times(1)).execute(any());
         verify(userDataMapper, times(1)).toInfoResponse(mockUserInfoDto);
     }
 
@@ -118,7 +128,7 @@ public class UserControllerTest {
         // given
         String accessToken = "0";
 
-        given(cookieUtil.getCookieValue(any(), eq(ConstantsUtil.accessToken))).willReturn(accessToken);
+        given(cookieManager.getCookieValue(any(), eq(ConstantsUtil.accessToken))).willReturn(accessToken);
 
         // when
         ResultActions resultActions = mockMvc.perform(delete("/api/auth/logout"));
@@ -126,7 +136,7 @@ public class UserControllerTest {
         // then
         resultActions.andExpect(status().isNoContent());
 
-        verify(logoutUseCase, times(1)).execute(accessToken);
+        verify(logoutUseCase, times(1)).execute(eq(accessToken), any());
     }
 
     @Test
@@ -134,7 +144,10 @@ public class UserControllerTest {
         // given
         String token = "0";
 
-        given(cookieUtil.getCookieValue(any(), eq(ConstantsUtil.refreshToken))).willReturn(token);
+        ReissueTokenDto reissueTokenDto = new ReissueTokenDto("0", "0");
+
+        given(cookieManager.getCookieValue(any(), eq(ConstantsUtil.refreshToken))).willReturn(token);
+        given(tokenReissueUseCase.execute(eq(token), any())).willReturn(reissueTokenDto);
 
         // when
         ResultActions resultActions = mockMvc.perform(get("/api/auth/token/refresh"));
@@ -180,7 +193,7 @@ public class UserControllerTest {
         // then
         resultActions.andExpect(status().isCreated());
 
-        verify(approvedUseCase, times(1)).execute(oauthId);
+        verify(approvedUseCase, times(1)).execute(eq(oauthId), any());
     }
 
     @Test

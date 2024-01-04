@@ -10,11 +10,13 @@ import org.springframework.web.bind.annotation.*;
 import team.themoment.officialgsm.admin.auth.dto.request.UserNameModifyRequest;
 import team.themoment.officialgsm.admin.auth.dto.response.UnapprovedListResponse;
 import team.themoment.officialgsm.admin.auth.dto.response.UserInfoResponse;
+import team.themoment.officialgsm.admin.auth.manager.CookieManager;
 import team.themoment.officialgsm.admin.auth.manager.UserManager;
 import team.themoment.officialgsm.admin.auth.mapper.AuthDataMapper;
 import team.themoment.officialgsm.common.util.ConstantsUtil;
-import team.themoment.officialgsm.common.util.CookieUtil;
+import team.themoment.officialgsm.domain.auth.dto.ReissueTokenDto;
 import team.themoment.officialgsm.domain.auth.dto.UserInfoDto;
+import team.themoment.officialgsm.domain.auth.spi.TokenProvider;
 import team.themoment.officialgsm.domain.auth.usecase.*;
 import team.themoment.officialgsm.domain.user.User;
 
@@ -26,7 +28,7 @@ import java.util.List;
 public class UserController {
     private final ModifyNameUseCase modifyNameUseCase;
     private final FindUserInfoUseCase findUserInfoUseCase;
-    private final CookieUtil cookieUtil;
+    private final CookieManager cookieManager;
     private final LogoutUseCase logoutUseCase;
     private final TokenReissueUseCase tokenReissueUseCase;
     private final AuthDataMapper userDataMapper;
@@ -34,6 +36,7 @@ public class UserController {
     private final ApprovedUseCase approvedUseCase;
     private final RefuseApprovedUseCase refuseApprovedUseCase;
     private final UserManager userManager;
+    private final TokenProvider tokenProvider;
 
     @PatchMapping("/username")
     public ResponseEntity<Void> nameModify(
@@ -53,7 +56,7 @@ public class UserController {
 
     @DeleteMapping("/logout")
     public ResponseEntity<Void> logout(HttpServletRequest request) {
-        String accessToken = cookieUtil.getCookieValue(request, ConstantsUtil.accessToken);
+        String accessToken = cookieManager.getCookieValue(request, ConstantsUtil.accessToken);
         User user = userManager.getCurrentUser();
         logoutUseCase.execute(accessToken, user);
         return ResponseEntity.noContent().build();
@@ -64,8 +67,12 @@ public class UserController {
             HttpServletRequest request,
             HttpServletResponse response
     ) {
-        String token = cookieUtil.getCookieValue(request, ConstantsUtil.refreshToken);
-        tokenReissueUseCase.execute(token, response);
+        String token = cookieManager.getCookieValue(request, ConstantsUtil.refreshToken);
+        ReissueTokenDto reissueTokenDto = tokenReissueUseCase.execute(token, response);
+
+        cookieManager.addTokenCookie(response, ConstantsUtil.accessToken, reissueTokenDto.getAccessToken(), tokenProvider.getACCESS_TOKEN_EXPIRE_TIME(), true);
+        cookieManager.addTokenCookie(response, ConstantsUtil.refreshToken, reissueTokenDto.getRefreshToken(), tokenProvider.getREFRESH_TOKEN_EXPIRE_TIME(), true);
+
         return ResponseEntity.ok().build();
     }
 

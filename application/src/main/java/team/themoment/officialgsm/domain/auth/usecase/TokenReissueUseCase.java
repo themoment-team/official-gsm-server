@@ -3,13 +3,11 @@ package team.themoment.officialgsm.domain.auth.usecase;
 
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import team.themoment.officialgsm.common.annotation.UseCaseWithTransaction;
 import team.themoment.officialgsm.common.exception.CustomException;
 import team.themoment.officialgsm.common.exception.CustomHttpStatus;
-import team.themoment.officialgsm.common.util.ConstantsUtil;
-import team.themoment.officialgsm.common.util.CookieUtil;
+import team.themoment.officialgsm.domain.auth.dto.ReissueTokenDto;
 import team.themoment.officialgsm.domain.auth.spi.TokenProvider;
 import team.themoment.officialgsm.domain.token.RefreshToken;
 import team.themoment.officialgsm.domain.user.User;
@@ -23,9 +21,8 @@ public class TokenReissueUseCase {
     private final RefreshTokenRepository refreshTokenRepository;
     private final UserRepository userRepository;
     private final TokenProvider tokenProvider;
-    private final CookieUtil cookieUtil;
 
-    public void execute(String token, HttpServletResponse response) {
+    public ReissueTokenDto execute(String token, HttpServletResponse response) {
         if (token == null)
             throw new CustomException("쿠키에 리프레시 토큰이 없습니다.", CustomHttpStatus.BADREQUEST);
 
@@ -43,10 +40,9 @@ public class TokenReissueUseCase {
             throw new CustomException("리프레시 토큰이 유효하지 않습니다.", CustomHttpStatus.BADREQUEST);
         }
 
-        cookieUtil.addTokenCookie(response, ConstantsUtil.accessToken, newAccessToken, tokenProvider.getACCESS_TOKEN_EXPIRE_TIME(), true);
-        cookieUtil.addTokenCookie(response, ConstantsUtil.refreshToken, newRefreshToken, tokenProvider.getREFRESH_TOKEN_EXPIRE_TIME(), true);
-
         RefreshToken updatedRefreshToken = refreshToken.updateRefreshToken(newRefreshToken);
         refreshTokenRepository.save(updatedRefreshToken);
+
+        return new ReissueTokenDto(newAccessToken, newRefreshToken);
     }
 }

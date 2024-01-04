@@ -10,7 +10,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import team.themoment.officialgsm.common.util.CookieUtil;
+import team.themoment.officialgsm.admin.auth.manager.CookieManager;
 import team.themoment.officialgsm.global.security.filter.JwtRequestFilter;
 import team.themoment.officialgsm.global.exception.handler.ExceptionHandlerFilter;
 import team.themoment.officialgsm.global.security.handler.CustomAuthenticationEntryPointHandler;
@@ -21,7 +21,7 @@ import team.themoment.officialgsm.global.security.service.OAuthService;
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final OAuthService oAuthService;
-    private final CookieUtil cookieUtil;
+    private final CookieManager cookieManager;
     private final ExceptionHandlerFilter exceptionHandlerFilter;
     private final JwtRequestFilter jwtRequestFilter;
     private final AuthenticationFailureHandler authenticationFailureHandler;
@@ -49,7 +49,7 @@ public class SecurityConfig {
         http.oauth2Login(oauth -> oauth.failureHandler(authenticationFailureHandler));
 
         http.exceptionHandling(exception ->
-                exception.authenticationEntryPoint(new CustomAuthenticationEntryPointHandler(cookieUtil)));
+                exception.authenticationEntryPoint(new CustomAuthenticationEntryPointHandler(cookieManager)));
 
         http
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
