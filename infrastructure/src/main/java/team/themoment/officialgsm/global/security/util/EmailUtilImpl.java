@@ -7,8 +7,11 @@ import team.themoment.officialgsm.common.util.EmailUtil;
 @Component
 public class EmailUtilImpl implements EmailUtil {
 
-    @Value("${emailId-regex}")
-    private String emailIdRegex;
+    private final String emailIdRegex;
+
+    public EmailUtilImpl(@Value("${emailId-regex}") String emailIdRegex) {
+        this.emailIdRegex = emailIdRegex;
+    }
 
     public String getOauthEmailDomain(String email) {
         int index = email.indexOf("@");

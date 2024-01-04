@@ -11,8 +11,11 @@ import team.themoment.officialgsm.common.util.CookieUtil;
 @Slf4j
 @Component
 public class CookieUtilImpl implements CookieUtil {
-    @Value("${cookie-domain}")
-    private String cookieDomain;
+    private final String cookieDomain;
+
+    public CookieUtilImpl(@Value("${cookie-domain}") String cookieDomain) {
+        this.cookieDomain = cookieDomain;
+    }
 
     @Override
     public void addTokenCookie(HttpServletResponse response, String name, String value, Long maxAge, boolean httpOnly) {

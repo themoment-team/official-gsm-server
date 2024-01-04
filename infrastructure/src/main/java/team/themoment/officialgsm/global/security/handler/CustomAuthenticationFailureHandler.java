@@ -16,8 +16,11 @@ import java.io.IOException;
 @Slf4j
 public class CustomAuthenticationFailureHandler implements AuthenticationFailureHandler {
 
-    @Value("${site-address}")
-    private String siteAddress;
+    private final String siteAddress;
+
+    public CustomAuthenticationFailureHandler(@Value("${site-address}") String siteAddress) {
+        this.siteAddress = siteAddress;
+    }
 
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
