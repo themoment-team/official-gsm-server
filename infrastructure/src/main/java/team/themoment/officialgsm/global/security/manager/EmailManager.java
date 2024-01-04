@@ -1,15 +1,14 @@
-package team.themoment.officialgsm.global.security.util;
+package team.themoment.officialgsm.global.security.manager;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import team.themoment.officialgsm.common.util.EmailUtil;
 
 @Component
-public class EmailUtilImpl implements EmailUtil {
+public class EmailManager {
 
     private final String emailIdRegex;
 
-    public EmailUtilImpl(@Value("${emailId-regex}") String emailIdRegex) {
+    public EmailManager(@Value("${emailId-regex}") String emailIdRegex) {
         this.emailIdRegex = emailIdRegex;
     }
 

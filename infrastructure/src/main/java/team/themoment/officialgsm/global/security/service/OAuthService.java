@@ -13,11 +13,11 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import team.themoment.officialgsm.common.util.ConstantsUtil;
 import team.themoment.officialgsm.common.util.CookieUtil;
-import team.themoment.officialgsm.common.util.EmailUtil;
 import team.themoment.officialgsm.domain.token.RefreshToken;
 import team.themoment.officialgsm.domain.user.Role;
 import team.themoment.officialgsm.domain.user.User;
 import team.themoment.officialgsm.global.security.jwt.JwtTokenProvider;
+import team.themoment.officialgsm.global.security.manager.EmailManager;
 import team.themoment.officialgsm.persistence.user.entity.UserJpaEntity;
 import team.themoment.officialgsm.persistence.user.mapper.UserMapper;
 import team.themoment.officialgsm.repository.token.RefreshTokenRepository;
@@ -40,7 +40,7 @@ public class OAuthService implements OAuth2UserService<OAuth2UserRequest, OAuth2
     private final UserRepository userRepository;
     private final RefreshTokenRepository refreshTokenRepository;
     private final JwtTokenProvider jwtTokenProvider;
-    private final EmailUtil emailUtil;
+    private final EmailManager emailManager;
     private final CookieUtil cookieUtil;
     private final UserMapper userMapper;
 
@@ -94,7 +94,7 @@ public class OAuthService implements OAuth2UserService<OAuth2UserRequest, OAuth2
         String emailDomain;
 
         try {
-            emailDomain = emailUtil.getOauthEmailDomain(email);
+            emailDomain = emailManager.getOauthEmailDomain(email);
         }catch (IllegalArgumentException e){
             throw new OAuth2AuthenticationException(e.getMessage());
         }
