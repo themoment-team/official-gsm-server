@@ -6,8 +6,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -18,16 +16,13 @@ import team.themoment.officialgsm.common.util.ConstantsUtil;
 import team.themoment.officialgsm.common.util.CookieUtil;
 import team.themoment.officialgsm.domain.token.BlackList;
 import team.themoment.officialgsm.global.security.jwt.JwtTokenProvider;
-import team.themoment.officialgsm.persistence.token.entity.BlackListRedisEntity;
 import team.themoment.officialgsm.persistence.token.repository.BlackListRepositoryImpl;
-import team.themoment.officialgsm.repository.token.BlackListRepository;
 
 import java.io.IOException;
 import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
-@Slf4j
 public class JwtRequestFilter extends OncePerRequestFilter {
     private final BlackListRepositoryImpl blackListRepository;
     private final JwtTokenProvider jwtProvider;

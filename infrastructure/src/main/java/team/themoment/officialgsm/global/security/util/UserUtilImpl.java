@@ -5,7 +5,6 @@ import team.themoment.officialgsm.common.util.UserUtil;
 
 public class UserUtilImpl implements UserUtil {
 
-
     @Override
     public String getCurrentUser() {
         return SecurityContextHolder.getContext().getAuthentication().getName();

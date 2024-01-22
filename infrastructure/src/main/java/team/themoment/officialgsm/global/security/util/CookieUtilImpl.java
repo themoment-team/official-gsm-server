@@ -3,12 +3,10 @@ package team.themoment.officialgsm.global.security.util;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import team.themoment.officialgsm.common.util.CookieUtil;
 
-@Slf4j
 @Component
 public class CookieUtilImpl implements CookieUtil {
     @Value("${cookie-domain}")
