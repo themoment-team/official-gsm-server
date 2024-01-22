@@ -10,7 +10,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import team.themoment.officialgsm.global.security.filter.JwtRequestFilter;
-import team.themoment.officialgsm.global.security.handler.ExceptionHandlerFilter;
+import team.themoment.officialgsm.global.security.filter.ExceptionHandlerFilter;
 import team.themoment.officialgsm.global.security.service.OAuthService;
 
 @Configuration
