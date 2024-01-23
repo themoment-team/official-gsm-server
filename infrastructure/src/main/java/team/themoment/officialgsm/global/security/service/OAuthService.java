@@ -12,15 +12,17 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
+import team.themoment.officialgsm.admin.auth.manager.CookieManager;
 import team.themoment.officialgsm.common.util.ConstantsUtil;
-import team.themoment.officialgsm.common.util.CookieUtil;
-import team.themoment.officialgsm.common.util.EmailUtil;
 import team.themoment.officialgsm.domain.token.RefreshToken;
 import team.themoment.officialgsm.domain.user.Role;
+import team.themoment.officialgsm.domain.user.User;
 import team.themoment.officialgsm.global.security.jwt.JwtTokenProvider;
+import team.themoment.officialgsm.global.security.manager.EmailManager;
 import team.themoment.officialgsm.persistence.user.entity.UserJpaEntity;
-import team.themoment.officialgsm.persistence.user.repository.UserJpaRepository;
+import team.themoment.officialgsm.persistence.user.mapper.UserMapper;
 import team.themoment.officialgsm.repository.token.RefreshTokenRepository;
+import team.themoment.officialgsm.repository.user.UserRepository;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -39,11 +41,12 @@ public class OAuthService implements OAuth2UserService<OAuth2UserRequest, OAuth2
 
     private final OAuth2UserService<OAuth2UserRequest, OAuth2User> delegateOauth2UserService = new DefaultOAuth2UserService();
     private final HttpServletResponse httpServletResponse;
-    private final UserJpaRepository userJpaRepository;
+    private final UserRepository userRepository;
     private final RefreshTokenRepository refreshTokenRepository;
     private final JwtTokenProvider jwtTokenProvider;
-    private final EmailUtil emailUtil;
-    private final CookieUtil cookieUtil;
+    private final EmailManager emailManager;
+    private final CookieManager cookieManager;
+    private final UserMapper userMapper;
 
     @Value("${domain}")
     private String schoolDomain;
@@ -60,12 +63,10 @@ public class OAuthService implements OAuth2UserService<OAuth2UserRequest, OAuth2
         String providerId = oAuth2User.getName();
         String email = oAuth2User.getAttribute("email");
 
-        UserJpaEntity user = getUser(providerId, email);
-        String nameAttribute = "id";
-        Long id = user.getUserSeq();
-        Role role = user.getRole();
+        User user = getUser(providerId, email);
+        String nameAttribute = "oauthId";
+        Role role = user.role();
         Map<String, Object> attributes = new HashMap<>(Map.of(
-                nameAttribute, id,
                 "oauthId", providerId,
                 "role", role,
                 "userEmail", email,
@@ -74,24 +75,26 @@ public class OAuthService implements OAuth2UserService<OAuth2UserRequest, OAuth2
         Collection<GrantedAuthority> authorities = new ArrayList<>(oAuth2User.getAuthorities());
         authorities.add(new SimpleGrantedAuthority(role.name()));
 
-        cookieLogic(user);
+        cookieLogic(userMapper.toEntity(user));
 
         redirectUser(user);
 
         return new UserInfo(authorities, attributes, nameAttribute);
     }
 
-    private UserJpaEntity getUser(String providerId, String email) {
-        UserJpaEntity savedUser = userJpaRepository.findByOauthId(providerId)
+    private User getUser(String providerId, String email) {
+        User savedUser = userRepository.findByOauthId(providerId)
                 .orElse(null);
+
         if (savedUser == null) {
             UserJpaEntity user = UserJpaEntity.builder()
                     .oauthId(providerId)
                     .userEmail(email)
+                    .userName(null)
                     .role(UNAPPROVED)
                     .requestedAt(LocalDateTime.now())
                     .build();
-            return userJpaRepository.save(user);
+            return userRepository.save(userMapper.toDomain(user));
         }
         return savedUser;
     }
@@ -100,8 +103,8 @@ public class OAuthService implements OAuth2UserService<OAuth2UserRequest, OAuth2
         String emailDomain;
 
         try {
-            emailDomain = emailUtil.getOauthEmailDomain(email);
-        }catch (IllegalArgumentException e){
+            emailDomain = emailManager.getOauthEmailDomain(email);
+        } catch (IllegalArgumentException e) {
             throw new OAuth2AuthenticationException(e.getMessage());
         }
 
@@ -109,19 +112,18 @@ public class OAuthService implements OAuth2UserService<OAuth2UserRequest, OAuth2
             throw new OAuth2AuthenticationException("학교 이메일이 아닙니다.");
         }
     }
-
     private void cookieLogic(UserJpaEntity user){
         String accessToken = jwtTokenProvider.generatedAccessToken(user.getOauthId());
         String refreshToken = jwtTokenProvider.generatedRefreshToken(user.getOauthId());
-        cookieUtil.addTokenCookie(httpServletResponse, ConstantsUtil.accessToken, accessToken, jwtTokenProvider.getACCESS_TOKEN_EXPIRE_TIME(), true);
-        cookieUtil.addTokenCookie(httpServletResponse, ConstantsUtil.refreshToken, refreshToken, jwtTokenProvider.getREFRESH_TOKEN_EXPIRE_TIME(), true);
+        cookieManager.addTokenCookie(httpServletResponse, ConstantsUtil.accessToken, accessToken, jwtTokenProvider.getACCESS_TOKEN_EXPIRE_TIME(), true);
+        cookieManager.addTokenCookie(httpServletResponse, ConstantsUtil.refreshToken, refreshToken, jwtTokenProvider.getREFRESH_TOKEN_EXPIRE_TIME(), true);
         RefreshToken entityToRedis = new RefreshToken(user.getOauthId(), refreshToken, jwtTokenProvider.getREFRESH_TOKEN_EXPIRE_TIME());
         refreshTokenRepository.save(entityToRedis);
     }
 
-    private void redirectUser(UserJpaEntity user){
-        Role role = user.getRole();
-        String userName = user.getUserName();
+    private void redirectUser(User user){
+        Role role = user.role();
+        String userName = user.userName();
 
         if (role == UNAPPROVED && userName != null) {
             redirectPendingPage();
