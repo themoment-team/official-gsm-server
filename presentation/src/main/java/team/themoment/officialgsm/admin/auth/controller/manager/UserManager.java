@@ -1,4 +1,4 @@
-package team.themoment.officialgsm.admin.auth.manager;
+package team.themoment.officialgsm.admin.auth.controller.manager;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;

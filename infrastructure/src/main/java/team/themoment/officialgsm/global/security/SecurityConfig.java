@@ -14,7 +14,7 @@ import team.themoment.officialgsm.global.security.filter.ExceptionHandlerFilter;
 import team.themoment.officialgsm.global.security.filter.JwtRequestFilter;
 import team.themoment.officialgsm.global.security.handler.CustomAuthenticationEntryPointHandler;
 import team.themoment.officialgsm.global.security.service.OAuthService;
-import team.themoment.officialgsm.admin.auth.manager.CookieManager;
+import team.themoment.officialgsm.admin.auth.controller.manager.CookieManager;
 
 @Configuration
 @EnableWebSecurity

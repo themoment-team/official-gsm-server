@@ -12,7 +12,7 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
-import team.themoment.officialgsm.admin.auth.manager.CookieManager;
+import team.themoment.officialgsm.admin.auth.controller.manager.CookieManager;
 import team.themoment.officialgsm.common.util.ConstantsUtil;
 import team.themoment.officialgsm.domain.token.RefreshToken;
 import team.themoment.officialgsm.domain.user.Role;
@@ -134,7 +134,7 @@ public class OAuthService implements OAuth2UserService<OAuth2UserRequest, OAuth2
         }
     }
 
-    private void redirectPendingPage(){
+    private void redirectPendingPage() {
         try {
             httpServletResponse.sendRedirect(siteAddress + "/auth/signup/pending");
         } catch (IOException e) {
@@ -142,7 +142,7 @@ public class OAuthService implements OAuth2UserService<OAuth2UserRequest, OAuth2
         }
     }
 
-    private void redirectHomePage(){
+    private void redirectHomePage() {
         try {
             httpServletResponse.sendRedirect(siteAddress);
         } catch (IOException e) {
@@ -150,7 +150,7 @@ public class OAuthService implements OAuth2UserService<OAuth2UserRequest, OAuth2
         }
     }
 
-    private void redirectSignupPage(){
+    private void redirectSignupPage() {
         try {
             httpServletResponse.sendRedirect(siteAddress + "/auth/signup");
         } catch (IOException e) {
