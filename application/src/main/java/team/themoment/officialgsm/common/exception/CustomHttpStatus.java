@@ -5,6 +5,7 @@ public enum CustomHttpStatus {
     OK(200, "OK"),
     CREATED(201, "Created"),
     NOT_FOUND(404, "Not Found"),
+    CONFLICT(409, "Conflict"),
     UNAUTHORIZED(401, "UNAUTHORIZED"),
     INTERNAL_SERVER_ERROR(500, "Internal Server Error");
 
