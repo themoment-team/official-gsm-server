@@ -18,7 +18,7 @@ public class EmailManager {
         String emailId = email.substring(0, index);
 
         if (emailId.matches(emailIdRegex)) {
-            throw new IllegalArgumentException("학생은 로그인할 수 없습니다.");
+//            throw new IllegalArgumentException("학생은 로그인할 수 없습니다.");
         }
 
         return email.substring(index + 1);
