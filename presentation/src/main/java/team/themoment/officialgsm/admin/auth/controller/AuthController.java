@@ -2,6 +2,7 @@ package team.themoment.officialgsm.admin.auth.controller;
 
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -12,10 +13,13 @@ import team.themoment.officialgsm.admin.auth.controller.manager.CookieManager;
 import team.themoment.officialgsm.admin.auth.controller.manager.UserManager;
 import team.themoment.officialgsm.admin.auth.controller.mapper.AuthDataMapper;
 import team.themoment.officialgsm.common.util.ConstantsUtil;
+import team.themoment.officialgsm.domain.auth.dto.ReissueTokenDto;
 import team.themoment.officialgsm.domain.auth.dto.UserInfoDto;
+import team.themoment.officialgsm.domain.auth.spi.TokenProvider;
 import team.themoment.officialgsm.domain.auth.usecase.FindUserInfoUseCase;
 import team.themoment.officialgsm.domain.auth.usecase.LogoutUseCase;
 import team.themoment.officialgsm.domain.auth.usecase.ModifyNameUseCase;
+import team.themoment.officialgsm.domain.auth.usecase.TokenReissueUseCase;
 import team.themoment.officialgsm.domain.user.User;
 
 
@@ -27,10 +31,12 @@ public class AuthController {
     private final ModifyNameUseCase modifyNameUseCase;
     private final FindUserInfoUseCase findUserInfoUseCase;
     private final LogoutUseCase logoutUseCase;
+    private final TokenReissueUseCase tokenReissueUseCase;
 
     private final UserManager userManager;
     private final CookieManager cookieManager;
     private final AuthDataMapper userDataMapper;
+    private final TokenProvider tokenProvider;
 
     @PatchMapping("/username")
     public ResponseEntity<Void> nameModify(
@@ -54,5 +60,19 @@ public class AuthController {
         User user = userManager.getCurrentUser();
         logoutUseCase.execute(accessToken, user);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/token/refresh")
+    public ResponseEntity<Void> tokenReissue (
+            HttpServletRequest request,
+            HttpServletResponse response
+    ) {
+        String token = cookieManager.getCookieValue(request, ConstantsUtil.refreshToken);
+        ReissueTokenDto reissueTokenDto = tokenReissueUseCase.execute(token);
+
+        cookieManager.addTokenCookie(response, ConstantsUtil.accessToken, reissueTokenDto.getAccessToken(), tokenProvider.getACCESS_TOKEN_EXPIRE_TIME(), true);
+        cookieManager.addTokenCookie(response, ConstantsUtil.refreshToken, reissueTokenDto.getRefreshToken(), tokenProvider.getREFRESH_TOKEN_EXPIRE_TIME(), true);
+
+        return ResponseEntity.ok().build();
     }
 }
