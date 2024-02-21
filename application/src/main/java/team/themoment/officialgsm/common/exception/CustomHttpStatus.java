@@ -4,6 +4,7 @@ public enum CustomHttpStatus {
 
     OK(200, "OK"),
     CREATED(201, "Created"),
+    BADREQUEST(400, "Bad Request"),
     NOT_FOUND(404, "Not Found"),
     CONFLICT(409, "Conflict"),
     UNAUTHORIZED(401, "UNAUTHORIZED"),

@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import team.themoment.officialgsm.common.exception.CustomException;
 import team.themoment.officialgsm.common.exception.CustomHttpStatus;
+import team.themoment.officialgsm.domain.auth.spi.TokenProvider;
 import team.themoment.officialgsm.global.security.auth.AuthDetailsService;
 
 import java.nio.charset.StandardCharsets;
@@ -23,7 +24,7 @@ import java.util.Date;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class JwtTokenProvider {
+public class JwtTokenProvider implements TokenProvider {
     @Value("${jwt.accessSecret}")
     private String accessSecret;
     @Value("${jwt.refreshSecret}")
@@ -115,6 +116,11 @@ public class JwtTokenProvider {
 
     public boolean isValidToken(String token, String secret) {
         return isExpiredToken(token, secret);
+    }
+
+    @Override
+    public String getRefreshSecert() {
+        return refreshSecret;
     }
 
 }
