@@ -109,7 +109,7 @@ public class OAuthService implements OAuth2UserService<OAuth2UserRequest, OAuth2
         }
 
         if (!emailDomain.equals(schoolDomain)) {
-            throw new OAuth2AuthenticationException("학교 이메일이 아닙니다.");
+//            throw new OAuth2AuthenticationException("학교 이메일이 아닙니다.");
         }
     }
     private void cookieLogic(UserJpaEntity user){

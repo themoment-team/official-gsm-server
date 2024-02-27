@@ -17,7 +17,7 @@ public class ApprovedUseCase {
     private final UserRepository userRepository;
 
     public void execute(String oauthId, User grantor) {
-        User user = userRepository.findByOauthId(oauthId)
+        User user = userRepository.findByOauthIdAndUserNameNotNull(oauthId)
                 .orElseThrow(() -> new CustomException("유저를 찾을 수 없습니다.", CustomHttpStatus.NOT_FOUND));
         LocalDateTime approvedAt = LocalDateTime.now();
        User approvedUser = user.approvedExecute(grantor, approvedAt);
