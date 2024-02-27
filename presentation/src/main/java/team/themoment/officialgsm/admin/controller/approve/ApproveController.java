@@ -8,6 +8,7 @@ import team.themoment.officialgsm.admin.controller.approve.dto.response.Unapprov
 import team.themoment.officialgsm.admin.controller.approve.mapper.ApproveDataMapper;
 import team.themoment.officialgsm.admin.controller.auth.manager.UserManager;
 import team.themoment.officialgsm.domain.approve.usecase.ApprovedUseCase;
+import team.themoment.officialgsm.domain.approve.usecase.RefuseApprovedUseCase;
 import team.themoment.officialgsm.domain.approve.usecase.UnapprovedListUseCase;
 import team.themoment.officialgsm.domain.user.User;
 
@@ -20,6 +21,7 @@ public class ApproveController {
 
     private final UnapprovedListUseCase unapprovedListUseCase;
     private final ApprovedUseCase approvedUseCase;
+    private final RefuseApprovedUseCase refuseApprovedUseCase;
 
     private final ApproveDataMapper approveDataMapper;
     private final UserManager userManager;
@@ -35,5 +37,11 @@ public class ApproveController {
         User grantor = userManager.getCurrentUser();
         approvedUseCase.execute(oauthId, grantor);
         return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/approved/{oauthId}")
+    public ResponseEntity<Void> refuseApproved(@PathVariable String oauthId) {
+        refuseApprovedUseCase.execute(oauthId);
+        return ResponseEntity.noContent().build();
     }
 }
