@@ -26,4 +26,16 @@ public record User(
                 this.requestedAt
         );
     }
+
+    public User approvedExecute(User grantor, LocalDateTime approvedAt) {
+        return new User(
+                this.oauthId,
+                this.userName,
+                this.userEmail,
+                Role.ADMIN,
+                grantor,
+                approvedAt,
+                this.requestedAt
+        );
+    }
 }
