@@ -10,7 +10,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import team.themoment.officialgsm.admin.auth.controller.manager.CookieManager;
+import team.themoment.officialgsm.admin.controller.auth.manager.CookieManager;
 import team.themoment.officialgsm.common.exception.CustomException;
 import team.themoment.officialgsm.common.exception.CustomHttpStatus;
 import team.themoment.officialgsm.common.util.ConstantsUtil;

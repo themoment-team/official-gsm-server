@@ -1,4 +1,4 @@
-package team.themoment.officialgsm.admin.auth.controller;
+package team.themoment.officialgsm.admin.controller.auth;
 
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -7,11 +7,11 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import team.themoment.officialgsm.admin.auth.controller.dto.request.UserNameModifyRequest;
-import team.themoment.officialgsm.admin.auth.controller.dto.response.UserInfoResponse;
-import team.themoment.officialgsm.admin.auth.controller.manager.CookieManager;
-import team.themoment.officialgsm.admin.auth.controller.manager.UserManager;
-import team.themoment.officialgsm.admin.auth.controller.mapper.AuthDataMapper;
+import team.themoment.officialgsm.admin.controller.auth.dto.request.UserNameModifyRequest;
+import team.themoment.officialgsm.admin.controller.auth.dto.response.UserInfoResponse;
+import team.themoment.officialgsm.admin.controller.auth.manager.CookieManager;
+import team.themoment.officialgsm.admin.controller.auth.manager.UserManager;
+import team.themoment.officialgsm.admin.controller.auth.mapper.AuthDataMapper;
 import team.themoment.officialgsm.common.util.ConstantsUtil;
 import team.themoment.officialgsm.domain.auth.dto.ReissueTokenDto;
 import team.themoment.officialgsm.domain.auth.dto.UserInfoDto;
@@ -21,7 +21,6 @@ import team.themoment.officialgsm.domain.auth.usecase.LogoutUseCase;
 import team.themoment.officialgsm.domain.auth.usecase.ModifyNameUseCase;
 import team.themoment.officialgsm.domain.auth.usecase.TokenReissueUseCase;
 import team.themoment.officialgsm.domain.user.User;
-
 
 @RestController
 @RequestMapping("/api/auth")

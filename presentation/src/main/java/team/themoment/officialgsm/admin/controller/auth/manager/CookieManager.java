@@ -1,4 +1,4 @@
-package team.themoment.officialgsm.admin.auth.controller.manager;
+package team.themoment.officialgsm.admin.controller.auth.manager;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;

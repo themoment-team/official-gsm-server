@@ -1,4 +1,4 @@
-package team.themoment.officialgsm.admin.auth.controller.dto.request;
+package team.themoment.officialgsm.admin.controller.auth.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;

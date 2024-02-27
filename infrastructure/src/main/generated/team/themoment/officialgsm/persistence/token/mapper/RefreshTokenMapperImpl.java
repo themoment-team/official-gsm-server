@@ -7,7 +7,7 @@ import team.themoment.officialgsm.persistence.token.entity.RefreshTokenRedisEnti
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-02-22T04:59:01+0900",
+    date = "2024-02-28T02:07:41+0900",
     comments = "version: 1.5.3.Final, compiler: javac, environment: Java 17.0.8.1 (Amazon.com Inc.)"
 )
 @Component
@@ -34,16 +34,12 @@ public class RefreshTokenMapperImpl implements RefreshTokenMapper {
             return null;
         }
 
-        String oauthId = null;
-        String refreshToken = null;
-        Long expiredAt = null;
+        RefreshToken.RefreshTokenBuilder refreshToken = RefreshToken.builder();
 
-        oauthId = refreshTokenRedisEntity.getOauthId();
-        refreshToken = refreshTokenRedisEntity.getRefreshToken();
-        expiredAt = refreshTokenRedisEntity.getExpiredAt();
+        refreshToken.oauthId( refreshTokenRedisEntity.getOauthId() );
+        refreshToken.refreshToken( refreshTokenRedisEntity.getRefreshToken() );
+        refreshToken.expiredAt( refreshTokenRedisEntity.getExpiredAt() );
 
-        RefreshToken refreshToken1 = new RefreshToken( oauthId, refreshToken, expiredAt );
-
-        return refreshToken1;
+        return refreshToken.build();
     }
 }

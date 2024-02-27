@@ -1,4 +1,4 @@
-package team.themoment.officialgsm.admin.auth.controller.dto.response;
+package team.themoment.officialgsm.admin.controller.auth.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
