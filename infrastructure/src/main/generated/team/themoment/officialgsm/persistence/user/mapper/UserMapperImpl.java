@@ -1,17 +1,15 @@
 package team.themoment.officialgsm.persistence.user.mapper;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.processing.Generated;
 import org.springframework.stereotype.Component;
-import team.themoment.officialgsm.domain.user.Role;
 import team.themoment.officialgsm.domain.user.User;
 import team.themoment.officialgsm.persistence.user.entity.UserJpaEntity;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-01-23T17:15:19+0900",
+    date = "2024-02-22T04:59:01+0900",
     comments = "version: 1.5.3.Final, compiler: javac, environment: Java 17.0.8.1 (Amazon.com Inc.)"
 )
 @Component
@@ -42,25 +40,17 @@ public class UserMapperImpl implements UserMapper {
             return null;
         }
 
-        String oauthId = null;
-        String userName = null;
-        String userEmail = null;
-        Role role = null;
-        User grantor = null;
-        LocalDateTime approvedAt = null;
-        LocalDateTime requestedAt = null;
+        User.UserBuilder user = User.builder();
 
-        oauthId = userJpaEntity.getOauthId();
-        userName = userJpaEntity.getUserName();
-        userEmail = userJpaEntity.getUserEmail();
-        role = userJpaEntity.getRole();
-        grantor = userJpaEntityToUser( userJpaEntity.getGrantor() );
-        approvedAt = userJpaEntity.getApprovedAt();
-        requestedAt = userJpaEntity.getRequestedAt();
+        user.oauthId( userJpaEntity.getOauthId() );
+        user.userName( userJpaEntity.getUserName() );
+        user.userEmail( userJpaEntity.getUserEmail() );
+        user.role( userJpaEntity.getRole() );
+        user.grantor( userJpaEntityToUser( userJpaEntity.getGrantor() ) );
+        user.approvedAt( userJpaEntity.getApprovedAt() );
+        user.requestedAt( userJpaEntity.getRequestedAt() );
 
-        User user = new User( oauthId, userName, userEmail, role, grantor, approvedAt, requestedAt );
-
-        return user;
+        return user.build();
     }
 
     @Override
@@ -100,24 +90,16 @@ public class UserMapperImpl implements UserMapper {
             return null;
         }
 
-        String oauthId = null;
-        String userName = null;
-        String userEmail = null;
-        Role role = null;
-        User grantor = null;
-        LocalDateTime approvedAt = null;
-        LocalDateTime requestedAt = null;
+        User.UserBuilder user = User.builder();
 
-        oauthId = userJpaEntity.getOauthId();
-        userName = userJpaEntity.getUserName();
-        userEmail = userJpaEntity.getUserEmail();
-        role = userJpaEntity.getRole();
-        grantor = toDomain( userJpaEntity.getGrantor() );
-        approvedAt = userJpaEntity.getApprovedAt();
-        requestedAt = userJpaEntity.getRequestedAt();
+        user.oauthId( userJpaEntity.getOauthId() );
+        user.userName( userJpaEntity.getUserName() );
+        user.userEmail( userJpaEntity.getUserEmail() );
+        user.role( userJpaEntity.getRole() );
+        user.grantor( toDomain( userJpaEntity.getGrantor() ) );
+        user.approvedAt( userJpaEntity.getApprovedAt() );
+        user.requestedAt( userJpaEntity.getRequestedAt() );
 
-        User user = new User( oauthId, userName, userEmail, role, grantor, approvedAt, requestedAt );
-
-        return user;
+        return user.build();
     }
 }
