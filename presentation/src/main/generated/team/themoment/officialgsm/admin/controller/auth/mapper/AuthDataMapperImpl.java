@@ -1,15 +1,15 @@
-package team.themoment.officialgsm.admin.auth.controller.mapper;
+package team.themoment.officialgsm.admin.controller.auth.mapper;
 
 import javax.annotation.processing.Generated;
 import org.springframework.stereotype.Component;
-import team.themoment.officialgsm.admin.auth.controller.dto.request.UserNameModifyRequest;
-import team.themoment.officialgsm.admin.auth.controller.dto.response.UserInfoResponse;
+import team.themoment.officialgsm.admin.controller.auth.dto.request.UserNameModifyRequest;
+import team.themoment.officialgsm.admin.controller.auth.dto.response.UserInfoResponse;
 import team.themoment.officialgsm.domain.auth.dto.UserInfoDto;
 import team.themoment.officialgsm.domain.auth.dto.UserNameDto;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-02-22T04:52:04+0900",
+    date = "2024-02-28T02:07:40+0900",
     comments = "version: 1.5.3.Final, compiler: javac, environment: Java 17.0.8.1 (Amazon.com Inc.)"
 )
 @Component

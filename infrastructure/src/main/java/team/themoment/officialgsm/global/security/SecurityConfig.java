@@ -14,7 +14,7 @@ import team.themoment.officialgsm.global.security.filter.ExceptionHandlerFilter;
 import team.themoment.officialgsm.global.security.filter.JwtRequestFilter;
 import team.themoment.officialgsm.global.security.handler.CustomAuthenticationEntryPointHandler;
 import team.themoment.officialgsm.global.security.service.OAuthService;
-import team.themoment.officialgsm.admin.auth.controller.manager.CookieManager;
+import team.themoment.officialgsm.admin.controller.auth.manager.CookieManager;
 
 @Configuration
 @EnableWebSecurity
@@ -36,6 +36,12 @@ public class SecurityConfig {
 
         http.authorizeHttpRequests((authorizeHttpRequests) ->
                 authorizeHttpRequests
+                        .requestMatchers("/api/auth/token/refresh").permitAll()
+                        .requestMatchers("/api/auth/logout").permitAll()
+                        .requestMatchers("/api/auth/userinfo").authenticated()
+                        .requestMatchers("/api/auth/username").authenticated()
+                        .requestMatchers("/api/auth/unapproved/list").hasAuthority("ADMIN")
+                        .requestMatchers("/api/auth/approved/**").hasAuthority("ADMIN")
                         .anyRequest().permitAll()
         );
 

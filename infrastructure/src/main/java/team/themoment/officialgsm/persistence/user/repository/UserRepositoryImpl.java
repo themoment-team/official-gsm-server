@@ -29,6 +29,12 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
+    public Optional<User> findByOauthIdAndUserNameNotNull(String oauthId) {
+        Optional<UserJpaEntity> user = userJpaRepository.findByOauthIdAndUserNameNotNull(oauthId);
+        return user.map(userMapper::toDomain);
+    }
+
+    @Override
     public void delete(User user) {
         userJpaRepository.delete(userMapper.toEntity(user));
     }

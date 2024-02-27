@@ -8,7 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
-import team.themoment.officialgsm.admin.auth.controller.manager.CookieManager;
+import team.themoment.officialgsm.admin.controller.auth.manager.CookieManager;
 import team.themoment.officialgsm.common.util.ConstantsUtil;
 
 import java.io.IOException;

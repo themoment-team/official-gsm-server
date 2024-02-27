@@ -12,7 +12,7 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
-import team.themoment.officialgsm.admin.auth.controller.manager.CookieManager;
+import team.themoment.officialgsm.admin.controller.auth.manager.CookieManager;
 import team.themoment.officialgsm.common.util.ConstantsUtil;
 import team.themoment.officialgsm.domain.token.RefreshToken;
 import team.themoment.officialgsm.domain.user.Role;
@@ -109,7 +109,7 @@ public class OAuthService implements OAuth2UserService<OAuth2UserRequest, OAuth2
         }
 
         if (!emailDomain.equals(schoolDomain)) {
-            throw new OAuth2AuthenticationException("학교 이메일이 아닙니다.");
+//            throw new OAuth2AuthenticationException("학교 이메일이 아닙니다.");
         }
     }
     private void cookieLogic(UserJpaEntity user){

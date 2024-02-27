@@ -9,6 +9,7 @@ import java.util.Optional;
 public interface UserRepository {
     User save(User user);
     Optional<User> findByOauthId(String oauthId);
+    Optional<User> findByOauthIdAndUserNameNotNull(String oauthId);
     void deleteAll();
     void delete(User user);
     List<User> findAllByRoleAndUserNameNotNull(Role role);

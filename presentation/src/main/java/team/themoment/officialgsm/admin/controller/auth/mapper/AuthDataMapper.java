@@ -1,8 +1,8 @@
-package team.themoment.officialgsm.admin.auth.controller.mapper;
+package team.themoment.officialgsm.admin.controller.auth.mapper;
 
 import org.mapstruct.*;
-import team.themoment.officialgsm.admin.auth.controller.dto.request.UserNameModifyRequest;
-import team.themoment.officialgsm.admin.auth.controller.dto.response.UserInfoResponse;
+import team.themoment.officialgsm.admin.controller.auth.dto.request.UserNameModifyRequest;
+import team.themoment.officialgsm.admin.controller.auth.dto.response.UserInfoResponse;
 import team.themoment.officialgsm.domain.auth.dto.UserInfoDto;
 import team.themoment.officialgsm.domain.auth.dto.UserNameDto;
 
