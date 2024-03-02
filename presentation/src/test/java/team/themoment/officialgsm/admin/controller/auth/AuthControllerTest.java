@@ -13,10 +13,13 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import team.themoment.officialgsm.admin.controller.auth.dto.request.UserNameModifyRequest;
 import team.themoment.officialgsm.admin.controller.auth.dto.response.UserInfoResponse;
+import team.themoment.officialgsm.admin.controller.auth.manager.CookieManager;
 import team.themoment.officialgsm.admin.controller.auth.manager.UserManager;
 import team.themoment.officialgsm.admin.controller.auth.mapper.AuthDataMapper;
+import team.themoment.officialgsm.common.util.ConstantsUtil;
 import team.themoment.officialgsm.domain.auth.dto.UserInfoDto;
 import team.themoment.officialgsm.domain.auth.usecase.FindUserInfoUseCase;
+import team.themoment.officialgsm.domain.auth.usecase.LogoutUseCase;
 import team.themoment.officialgsm.domain.auth.usecase.ModifyNameUseCase;
 import team.themoment.officialgsm.domain.user.Role;
 
@@ -25,8 +28,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -41,6 +43,12 @@ class AuthControllerTest {
 
     @Mock
     FindUserInfoUseCase findUserInfoUseCase;
+
+    @Mock
+    LogoutUseCase logoutUseCase;
+
+    @Mock
+    CookieManager cookieManager;
 
     @Mock
     UserManager userManager;
@@ -94,5 +102,22 @@ class AuthControllerTest {
 
         verify(findUserInfoUseCase, times(1)).execute(any());
         verify(userDataMapper, times(1)).toInfoResponse(mockUserInfoDto);
+    }
+
+
+    @Test
+    void logout() throws Exception {
+        // given
+        String accessToken = "0";
+
+        given(cookieManager.getCookieValue(any(), eq(ConstantsUtil.accessToken))).willReturn(accessToken);
+
+        // when
+        ResultActions resultActions = mockMvc.perform(delete("/api/auth/logout"));
+
+        // then
+        resultActions.andExpect(status().isNoContent());
+
+        verify(logoutUseCase, times(1)).execute(eq(accessToken), any());
     }
 }
