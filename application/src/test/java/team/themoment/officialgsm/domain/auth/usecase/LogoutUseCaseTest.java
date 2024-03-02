@@ -75,4 +75,28 @@ class LogoutUseCaseTest {
         verify(refreshTokenRepository, never()).delete(any());
         verify(blackListRepository, never()).save(any());
     }
+
+    @Test
+    void execute_blackListConflict() {
+        // given
+        String accessTokenValue = "0";
+        String refreshTokenValue = "0";
+        String oauthId = "0";
+
+        User user = new User(oauthId, "신희성", "s23012@gsm.hs.kr", Role.UNAPPROVED, null, null, null);
+        RefreshToken refreshToken = new RefreshToken(oauthId, refreshTokenValue, 7200L);
+
+        given(refreshTokenRepository.findByOauthId(oauthId)).willReturn(Optional.of(refreshToken));
+
+        ValueOperations<String, String> valueOperationsMock = mock(ValueOperations.class);
+        given(redisTemplate.opsForValue()).willReturn(valueOperationsMock);
+        given(valueOperationsMock.get(accessTokenValue)).willReturn("0");
+
+        // when
+        assertThrows(CustomException.class, () -> logoutUseCase.execute(accessTokenValue, user));
+
+        // then
+        verify(refreshTokenRepository, never()).save(any());
+        verify(blackListRepository, never()).save(any());
+    }
 }
