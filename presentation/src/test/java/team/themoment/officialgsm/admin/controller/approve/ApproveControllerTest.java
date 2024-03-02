@@ -15,6 +15,7 @@ import team.themoment.officialgsm.admin.controller.approve.mapper.ApproveDataMap
 import team.themoment.officialgsm.admin.controller.auth.manager.UserManager;
 import team.themoment.officialgsm.domain.approve.dto.UnapprovedListDto;
 import team.themoment.officialgsm.domain.approve.usecase.ApprovedUseCase;
+import team.themoment.officialgsm.domain.approve.usecase.RefuseApprovedUseCase;
 import team.themoment.officialgsm.domain.approve.usecase.UnapprovedListUseCase;
 import team.themoment.officialgsm.domain.user.Role;
 
@@ -26,8 +27,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -42,6 +42,9 @@ class ApproveControllerTest {
 
     @Mock
     ApprovedUseCase approvedUseCase;
+
+    @Mock
+    RefuseApprovedUseCase refuseApprovedUseCase;
 
     @Mock
     UserManager userManager;
@@ -93,5 +96,19 @@ class ApproveControllerTest {
         resultActions.andExpect(status().isCreated());
 
         verify(approvedUseCase, times(1)).execute(eq(oauthId), any());
+    }
+
+    @Test
+    void refuseApproved() throws Exception {
+        // given
+        String oauthId = "0";
+
+        // when
+        ResultActions resultActions = mockMvc.perform(delete("/api/auth/approved/" + oauthId));
+
+        // then
+        resultActions.andExpect(status().isNoContent());
+
+        verify(refuseApprovedUseCase, times(1)).execute(oauthId);
     }
 }
