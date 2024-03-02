@@ -77,4 +77,25 @@ class TokenReissueUseCaseTest {
         verify(userRepository, never()).findByOauthId(any());
         verify(refreshTokenRepository, never()).save(any());
     }
+
+    @Test
+    void execute_userNotFound() {
+        // given
+        String refreshTokenValue = "0";
+        String oauthId = "0";
+        String refreshSecret = "0";
+
+        given(tokenProvider.getRefreshSecert()).willReturn(refreshSecret);
+        given(tokenProvider.getRefreshTokenOauthId(refreshTokenValue, refreshSecret)).willReturn(oauthId);
+
+        given(userRepository.findByOauthId(oauthId)).willReturn(Optional.empty());
+
+        // when
+        assertThrows(CustomException.class, () -> tokenReissueUseCase.execute(refreshTokenValue));
+
+        // then
+        verify(refreshTokenRepository, never()).findByOauthId(any());
+
+        verify(refreshTokenRepository, never()).save(any());
+    }
 }
