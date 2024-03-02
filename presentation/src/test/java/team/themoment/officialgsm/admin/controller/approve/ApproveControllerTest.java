@@ -12,17 +12,22 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import team.themoment.officialgsm.admin.controller.approve.dto.response.UnapprovedListResponse;
 import team.themoment.officialgsm.admin.controller.approve.mapper.ApproveDataMapper;
+import team.themoment.officialgsm.admin.controller.auth.manager.UserManager;
 import team.themoment.officialgsm.domain.approve.dto.UnapprovedListDto;
+import team.themoment.officialgsm.domain.approve.usecase.ApprovedUseCase;
 import team.themoment.officialgsm.domain.approve.usecase.UnapprovedListUseCase;
 import team.themoment.officialgsm.domain.user.Role;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -34,6 +39,12 @@ class ApproveControllerTest {
 
     @Mock
     UnapprovedListUseCase unapprovedListUseCase;
+
+    @Mock
+    ApprovedUseCase approvedUseCase;
+
+    @Mock
+    UserManager userManager;
 
     @Mock
     ApproveDataMapper approveMapper;
@@ -68,5 +79,19 @@ class ApproveControllerTest {
 
         verify(unapprovedListUseCase, times(1)).execute();
         verify(approveMapper, times(1)).toUnapprovedListResponse(List.of(unapprovedListDto));
+    }
+
+    @Test
+    void approved() throws Exception {
+        // given
+        String oauthId = "0";
+
+        // when
+        ResultActions resultActions = mockMvc.perform(patch("/api/auth/approved/" + oauthId));
+
+        // then
+        resultActions.andExpect(status().isCreated());
+
+        verify(approvedUseCase, times(1)).execute(eq(oauthId), any());
     }
 }
