@@ -14,9 +14,10 @@ import team.themoment.officialgsm.repository.user.UserRepository;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class ApprovedUseCaseTest {
@@ -37,7 +38,7 @@ class ApprovedUseCaseTest {
         User user = new User(oauthId, "신희성", "s23012@gsm.hs.kr", Role.UNAPPROVED, null, null, null);
         User grantor = new User("1", "최장우", "s22000@gsm.hs.kr", Role.ADMIN, null, null, null);
 
-        given(userRepository.findByOauthId(oauthId)).willReturn(Optional.of(user));
+        given(userRepository.findByOauthIdAndUserNameNotNull(oauthId)).willReturn(Optional.of(user));
 
         // when
         approvedUseCase.execute(oauthId, grantor);
