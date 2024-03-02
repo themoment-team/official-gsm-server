@@ -1,11 +1,11 @@
 package team.themoment.officialgsm.domain.auth.usecase;
 
-import jakarta.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import team.themoment.officialgsm.common.exception.CustomException;
 import team.themoment.officialgsm.domain.auth.dto.ReissueTokenDto;
 import team.themoment.officialgsm.domain.auth.spi.TokenProvider;
 import team.themoment.officialgsm.domain.token.RefreshToken;
@@ -17,8 +17,11 @@ import team.themoment.officialgsm.repository.user.UserRepository;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.never;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -63,5 +66,15 @@ class TokenReissueUseCaseTest {
 
         assertThat(reissueTokenDto.getAccessToken()).isEqualTo("1");
         assertThat(reissueTokenDto.getRefreshToken()).isEqualTo("1");
+    }
+
+    @Test
+    void execute_refreshTokenIsNull() {
+        // given &  when
+        assertThrows(CustomException.class, () -> tokenReissueUseCase.execute(null));
+
+        // then
+        verify(userRepository, never()).findByOauthId(any());
+        verify(refreshTokenRepository, never()).save(any());
     }
 }
