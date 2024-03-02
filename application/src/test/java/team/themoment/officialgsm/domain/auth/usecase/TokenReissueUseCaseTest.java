@@ -98,4 +98,27 @@ class TokenReissueUseCaseTest {
 
         verify(refreshTokenRepository, never()).save(any());
     }
+
+    @Test
+    void execute_refreshTokenIsNotValid() {
+        // given
+        String refreshTokenValue = "0";
+        String oauthId = "0";
+        String refreshSecret = "0";
+
+        User user = new User(oauthId, "신희성", "s23012@gsm.hs.kr", Role.UNAPPROVED, null, null, null);
+        RefreshToken refreshToken = new RefreshToken(oauthId, refreshTokenValue + 1, 0L);
+
+        given(tokenProvider.getRefreshSecert()).willReturn(refreshSecret);
+        given(tokenProvider.getRefreshTokenOauthId(refreshTokenValue, refreshSecret)).willReturn(oauthId);
+
+        given(userRepository.findByOauthId(oauthId)).willReturn(Optional.of(user));
+        given(refreshTokenRepository.findByOauthId(oauthId)).willReturn(Optional.of(refreshToken));
+
+        // when
+        assertThrows(CustomException.class, () -> tokenReissueUseCase.execute(refreshTokenValue));
+
+        // then
+        verify(refreshTokenRepository, never()).save(any());
+    }
 }
