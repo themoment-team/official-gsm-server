@@ -5,12 +5,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import team.themoment.officialgsm.common.exception.CustomException;
 import team.themoment.officialgsm.domain.user.Role;
 import team.themoment.officialgsm.domain.user.User;
 import team.themoment.officialgsm.repository.user.UserRepository;
 
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
@@ -38,5 +40,20 @@ class RefuseApprovedUseCaseTest {
         // then
         verify(userRepository, times(1)).findByOauthIdAndUserNameNotNull(oauthId);
         verify(userRepository, times(1)).delete(user);
+    }
+
+    @Test
+    void execute_userNotFound() {
+        // given
+        String oauthId = "0";
+
+        given(userRepository.findByOauthIdAndUserNameNotNull(oauthId)).willReturn(Optional.empty());
+
+        // when
+        assertThrows(CustomException.class, () -> refuseApprovedUseCase.execute(oauthId));
+
+        // then
+        verify(userRepository, times(1)).findByOauthIdAndUserNameNotNull(oauthId);
+        verify(userRepository, never()).delete(any());
     }
 }
