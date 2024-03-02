@@ -17,10 +17,13 @@ import team.themoment.officialgsm.admin.controller.auth.manager.CookieManager;
 import team.themoment.officialgsm.admin.controller.auth.manager.UserManager;
 import team.themoment.officialgsm.admin.controller.auth.mapper.AuthDataMapper;
 import team.themoment.officialgsm.common.util.ConstantsUtil;
+import team.themoment.officialgsm.domain.auth.dto.ReissueTokenDto;
 import team.themoment.officialgsm.domain.auth.dto.UserInfoDto;
+import team.themoment.officialgsm.domain.auth.spi.TokenProvider;
 import team.themoment.officialgsm.domain.auth.usecase.FindUserInfoUseCase;
 import team.themoment.officialgsm.domain.auth.usecase.LogoutUseCase;
 import team.themoment.officialgsm.domain.auth.usecase.ModifyNameUseCase;
+import team.themoment.officialgsm.domain.auth.usecase.TokenReissueUseCase;
 import team.themoment.officialgsm.domain.user.Role;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -46,6 +49,12 @@ class AuthControllerTest {
 
     @Mock
     LogoutUseCase logoutUseCase;
+
+    @Mock
+    TokenReissueUseCase tokenReissueUseCase;
+
+    @Mock
+    TokenProvider tokenProvider;
 
     @Mock
     CookieManager cookieManager;
@@ -119,5 +128,24 @@ class AuthControllerTest {
         resultActions.andExpect(status().isNoContent());
 
         verify(logoutUseCase, times(1)).execute(eq(accessToken), any());
+    }
+
+    @Test
+    void tokenReissue() throws Exception {
+        // given
+        String token = "0";
+
+        ReissueTokenDto reissueTokenDto = new ReissueTokenDto("0", "0");
+
+        given(cookieManager.getCookieValue(any(), eq(ConstantsUtil.refreshToken))).willReturn(token);
+        given(tokenReissueUseCase.execute(eq(token))).willReturn(reissueTokenDto);
+
+        // when
+        ResultActions resultActions = mockMvc.perform(get("/api/auth/token/refresh"));
+
+        // then
+        resultActions.andExpect(status().isOk());
+
+        verify(tokenReissueUseCase, times(1)).execute(eq(token));
     }
 }
